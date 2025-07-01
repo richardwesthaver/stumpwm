@@ -1,2 +1,2 @@
-(fiasco:define-test-package #:stumpwm-tests
-  (:use #:stumpwm))
+(defpackage #:stumpwm/tests
+  (:use #:stumpwm #:rt))

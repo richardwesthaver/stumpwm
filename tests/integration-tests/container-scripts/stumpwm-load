@@ -1,7 +1,0 @@
-#!/bin/bash
-set -e
-
-file=$(mktemp --suffix=.lisp)
-cat > "$file"
-stumpwm-cmd "eval (load \"$file\")"
-rm "$file"

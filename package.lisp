@@ -18,9 +18,9 @@
 ;; <http://www.gnu.org/licenses/>.
 
 (defpackage :stumpwm
-  (:use :cl
-        #:alexandria)
-  (:shadow #:yes-or-no-p #:y-or-n-p))
+  (:use :cl #:std)
+  (:import-from :std/seq :starts-with)
+  (:shadow #:yes-or-no-p #:y-or-n-p #:message #:version #:info #:take #:name))
 
 (defpackage :stumpwm-user
   (:use :cl :stumpwm))

@@ -800,7 +800,7 @@ to respect the minimum frame size."
              (frame-y frame) y
              (frame-width frame) w
              (frame-x frame) x)
-       (if-let (win (frame-window frame))
+       (when-let ((win (frame-window frame)))
            (update-decoration win))))
     ((or (< w (tree-min-width tree))
          (< h (tree-min-height tree)))
@@ -815,8 +815,8 @@ to respect the minimum frame size."
        ;; Move windows in removed frames
        (tree-iterate tree-to-discard
                      (lambda (f)
-                       (if-let (win (frame-window f))
-                           (hide-window win))
+                       (when-let ((win (frame-window f)))
+                         (hide-window win))
                        (migrate-frame-windows group f target-frame)))
        (resize-tree group tree-to-resize w h x y)))
     (t

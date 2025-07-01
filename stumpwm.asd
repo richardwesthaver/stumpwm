@@ -12,7 +12,7 @@
   ;; :license "GNU General Public License"
   :description "A tiling, keyboard driven window manager"
   :serial t
-  :depends-on (#:alexandria
+  :depends-on (#:std
                #:cl-ppcre
                #:clx
                #:sb-posix
@@ -80,14 +80,14 @@
   :name "StumpWM tests"
   :serial t
   :depends-on ("stumpwm"
-               "fiasco")
+               "rt")
   :pathname "tests/"
   :components ((:file "package")
                (:file "kmap")
                (:file "pathnames")
                (:file "mode-line-formatters"))
   :perform (test-op (o c)
-             (uiop/package:symbol-call "FIASCO" "RUN-TESTS" 'stumpwm-tests)))
+             (uiop/package:symbol-call "RT" "DO-TESTS" :stumpwm)))
 
 ;; Quicklisp prefers systems in the central registry over its own systems
 (push (asdf:system-relative-pathname "stumpwm" "dynamic-mixins/") asdf:*central-registry*)

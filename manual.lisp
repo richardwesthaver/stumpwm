@@ -158,7 +158,7 @@ the maximum line width."
 
 (defun generate-command-doc (s line)
   (ppcre:register-groups-bind (name) ("^!!! (.*)" line)
-    (if-let (symbol (find-symbol (string-upcase name) :stumpwm))
+    (if-let ((symbol (find-symbol (string-upcase name) :stumpwm)))
       (let ((cmd (symbol-function symbol))
             (*print-pretty* nil))
         (format s "@deffn {Command} ~A " name)

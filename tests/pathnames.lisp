@@ -4,5 +4,5 @@
   (is (stumpwm::directory-pathname-p "/")))
 
 (deftest test-ensure-directory-pathname ()
-  (is (equal (pathname-as-directory "/") #P"/"))
-  (is (equal (pathname-as-directory "/test.lisp") #P"/test.lisp/")))
+  (isequal (pathname-as-directory "/") #P"/")
+  (isequal (pathname-as-directory "/test.lisp") #P"/test.lisp/"))

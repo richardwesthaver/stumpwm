@@ -1052,7 +1052,7 @@ Does not trim if `TRIM-COUNT' is nil, and returns the empty string if it is zero
         expander-char trim-count trim-end-p)
     (labels ((read-next-expander ()
                (when (> length end)
-                 (if-let ((pos (position #\% str :start end :end length :test #'char=)))
+                 (when-let ((pos (position #\% str :start end :end length :test #'char=)))
                    (let ((percents (if-let ((end-percents (position #\% str :start (1+ pos) :end (1+ length) :test #'char/=)))
                                      (- end-percents pos)
                                      ;; nil means it /didn't/ find a char that wasn't a percent, so it must be percents allll
@@ -1078,7 +1078,7 @@ Does not trim if `TRIM-COUNT' is nil, and returns the empty string if it is zero
                            (values nil pos end-escapes escapes nil)))))))
 
              (handle-expander ()
-               (if-let ((expander (second (assoc expander-char fmt-alist :test #'char=))))
+               (when-let ((expander (second (assoc expander-char fmt-alist :test #'char=))))
                  (string-shorten
                   (let ((result (apply expander args)))
                     ;; Original would already produce an error since #'string would fail to convert to string,

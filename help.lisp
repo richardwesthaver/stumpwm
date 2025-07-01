@@ -126,23 +126,23 @@ which-key window. Two arguments will be passed to this formatter:
 (defcommand describe-key (keys) ((:key-seq "Describe key:"))
   "Either interactively type the key sequence or supply it as text. This
   command prints the command bound to the specified key sequence."
-  (if-let ((cmd (loop for map in (top-maps)
-                      for cmd = (lookup-key-sequence map keys)
-                      when cmd return cmd))
-           (printed-key (mapcar 'print-key keys)))
-    (let ((cmd-without-args (argument-pop
-                              (make-argument-line :string cmd :start 0))))
-      (message-no-timeout "~{~A~^ ~} is bound to \"~A\".~%~A"
-                          printed-key cmd
-                          (describe-command-to-stream cmd-without-args nil)))
-    (cond ((and (help-key-p keys)
-                (cdr printed-key))
-           (message "~{~A~^ ~} shows the bindings for the prefix map under ~{~A~^ ~}."
-                    printed-key (butlast printed-key)))
-          ((cancel-key-p keys)
-           (message "Any command ending in ~A is meant to cancel any command in progress \"ABORT\".~%"
-                    (lastcar printed-key)))
-          (t (message "~{~A~^ ~} is not bound." printed-key)))))
+  (let ((printed-key (mapcar 'print-key keys)))
+    (if-let ((cmd (loop for map in (top-maps)
+                        for cmd = (lookup-key-sequence map keys)
+                        when cmd return cmd)))
+      (let ((cmd-without-args (argument-pop
+                               (make-argument-line :string cmd :start 0))))
+        (message-no-timeout "~{~A~^ ~} is bound to \"~A\".~%~A"
+                            printed-key cmd
+                            (describe-command-to-stream cmd-without-args nil)))
+      (cond ((and (help-key-p keys)
+                  (cdr printed-key))
+             (message "~{~A~^ ~} shows the bindings for the prefix map under ~{~A~^ ~}."
+                      printed-key (butlast printed-key)))
+            ((cancel-key-p keys)
+             (message "Any command ending in ~A is meant to cancel any command in progress \"ABORT\".~%"
+                      (lastcar printed-key)))
+            (t (message "~{~A~^ ~} is not bound." printed-key))))))
 
 (defun describe-variable-to-stream (var stream)
   "Write the help for the variable to the stream."

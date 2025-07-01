@@ -302,7 +302,6 @@ further up. "
     ;; callback function
     (sb-alien:alien-sap
      (sb-alien::alien-lambda sb-alien:void ((signum sb-alien:int))
-       (declare (ignore signum))
        ,@body))))
 
 ;; Usage: (stumpwm)

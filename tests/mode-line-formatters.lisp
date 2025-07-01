@@ -1,4 +1,4 @@
-(in-package #:stumpwm-tests)
+(in-package #:stumpwm/tests)
 
 (deftest test-bar ()
   (is (= 3 (count #\X (bar 60 5 #\X #\= ) :test #'char=)))
