@@ -1,0 +1,25 @@
+;;; stumpwm @ 2025-06-27.22:38:10 -*- mode:skel; -*-
+:name "stumpwm"
+:author ""
+:version "1.0.0"
+:bind
+((emacs-locals
+  :dir-locals
+  ((nil . ((indent-tabs-mode . nil)))
+   (makefile-mode . ((indent-tabs-mode . t)))))
+ ;; (sbcl :env "/usr/local/bin/core")
+ )
+:vc (:hg "https://vc.compiler.company/ext/stumpwm"
+     (upstream (:git "https://github.com/stumpwm/stumpwm"))
+     (gh (:git "ssh://git@github.com/richardwesthaver/stumpwm")))
+:rules
+((default (build))
+ (build () #$sbcl --load ./make-image.lisp$#)
+ (install ()
+  (with-sudo 
+   "install -m 755 stumpwm /usr/local/bin/"))
+ (clean ()
+  #$rm -f *.fasl *.fas *.lib *.*fsl
+  rm -f *.log *.fns *.fn *.aux *.cp *.ky *.log *.toc *.pg *.tp *.vr *.vrs
+  rm -f stumpwm$#))
+
