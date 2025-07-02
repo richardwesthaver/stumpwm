@@ -15,16 +15,15 @@
 :rules
 ((default (build))
  (build ()
-  (with-sbcl (:noinform t :quit t)
+  (with-sbcl (:noinform t :quit t :input t)
    (asdf:load-system :stumpwm)
    (asdf:load-system :modeline)
    (asdf:load-system :util)
-   (in-package :stumpwm)
-   (set-module-dir (merge-pathnames ".stumpwm.d/contrib" (user-homedir-pathname)))
+   (uiop:symbol-call :stumpwm 'set-module-dir (merge-pathnames ".stumpwm.d/contrib" (user-homedir-pathname)))
    (when (uiop:version<= "3.1.5" (asdf:asdf-version))
     ;; We register StumpWM and its dependencies as immutable, to stop ASDF from
     ;; looking for their source code when loading modules.
-    (uiop:symbol-call '#:asdf '#:register-immutable-system :stumpwm)
+    ;; (uiop:symbol-call '#:asdf '#:register-immutable-system :stumpwm)
     ;; (dolist (system-name (uiop:symbol-call '#:asdf '#:system-depends-on (asdf:find-system :stumpwm)))
     ;; (uiop:symbol-call '#:asdf '#:register-immutable-system system-name))
     )
@@ -32,11 +31,8 @@
     "stumpwm" 
     :toplevel 
     (lambda ()
-     ;; asdf requires sbcl_home to be set, so set it to the value when the image was built
-     (std:when-let ((home #.(sb-ext:posix-getenv "SBCL_HOME")))
-      (sb-posix:putenv (format nil "SBCL_HOME=~A" home)))
-     (stumpwm)
-     0)
+     (uiop:symbol-call :stumpwm "STUMPWM")
+     (exit :code 0))
     :executable t
     :purify t
     :compression t)))
