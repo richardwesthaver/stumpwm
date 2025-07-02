@@ -45,14 +45,6 @@
           read-one-line))
 
 ;;; General Utilities
-(defun take (n list)
-  "Returns a list with the first n elements of the given list, and the
-remaining tail of the list as a second value."
-  (loop for l on list
-        repeat n
-        collect (car l) into result
-        finally (return (values result l))))
-
 ;; This could use a much more efficient algorithm.
 ;; But for our purposes with small lists it's likely ok.
 (defun longest-common-prefix (seqs &key (test #'eql))
@@ -105,7 +97,7 @@ and complete the input by mutating it."))
 
 (defmethod input-completion-reset ((cs input-completion-style-unambiguous) completions)
   (setf (slot-value cs 'completions)
-        (take (slot-value cs 'display-limit) completions)))
+        (take* (slot-value cs 'display-limit) completions)))
 
 (defmethod input-completion-complete ((cs input-completion-style-unambiguous) input direction)
   (declare (ignore direction))
@@ -434,7 +426,7 @@ match with an element of the completions."
   (if (and (string= "" input-line) (not *input-completion-show-empty*))
       '()
       (multiple-value-bind (completions more)
-          (take *maximum-completions* (input-find-completions input-line all-completions))
+          (take* *maximum-completions* (input-find-completions input-line all-completions))
         (if more
             (append (butlast completions)
                     (list (format nil "... and ~D more" (1+ (length more)))))

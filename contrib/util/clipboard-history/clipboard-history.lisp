@@ -42,7 +42,7 @@
 (stumpwm:defcommand show-clipboard-history () ()
   "Select from previously saved selections"
   (if (null *clipboard-history*)
-      (stumpwm:message "No selection history")
+      (stumpwm:swm-message "No selection history")
       (let ((sel (second
                   (stumpwm:select-from-menu
                    (stumpwm:current-screen)

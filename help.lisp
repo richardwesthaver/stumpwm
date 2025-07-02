@@ -45,24 +45,24 @@ which-key window. Two arguments will be passed to this formatter:
   ;; only somewhat nasty
   (let* ((rows (ceiling (length list) columns))
          (data (loop for i from 0 below (length list) by (max rows 1)
-                  collect (subseq list i (min (+ i rows) (length list)))))
+                     collect (subseq list i (min (+ i rows) (length list)))))
          (max (mapcar (lambda (col)
                         (reduce 'max col :key 'length :initial-value 0))
                       data))
          (padstr (make-string pad :initial-element char))
          (cols ;; normalize width
-          (loop
+           (loop
              for i in data
              for j in max
              for c from 0
              collect (loop
-                        for k from 0 below rows
-                        for s = (or (nth k i) "")
-                        for len = (make-string (- j (length s))
-                                               :initial-element char)
-                        collect (ecase (or (nth c col-aligns) align)
-                                  (:left (format nil "~a~a~a" (if (= c 0) "" padstr) s len))
-                                  (:right (format nil "~a~a~a" (if (= c 0) "" padstr) len s)))))))
+                       for k from 0 below rows
+                       for s = (or (nth k i) "")
+                       for len = (make-string (- j (length s))
+                                              :initial-element char)
+                       collect (ecase (or (nth c col-aligns) align)
+                                 (:left (format nil "~a~a~a" (if (= c 0) "" padstr) s len))
+                                 (:right (format nil "~a~a~a" (if (= c 0) "" padstr) len s)))))))
     (apply 'mapcar 'concat (or cols '(nil)))))
 
 (defun display-bindings-for-keymaps (key-seq &rest keymaps)
@@ -88,7 +88,7 @@ which-key window. Two arguments will be passed to this formatter:
                         (or (columnize data cols) '("(EMPTY MAP)")))))
 
 (defcommand commands () ()
-"List all available commands."
+  "List all available commands."
   (let* ((screen (current-screen))
          (data (all-commands))
          (cols (ceiling (length data)
@@ -130,19 +130,19 @@ which-key window. Two arguments will be passed to this formatter:
     (if-let ((cmd (loop for map in (top-maps)
                         for cmd = (lookup-key-sequence map keys)
                         when cmd return cmd)))
-      (let ((cmd-without-args (argument-pop
-                               (make-argument-line :string cmd :start 0))))
-        (message-no-timeout "~{~A~^ ~} is bound to \"~A\".~%~A"
-                            printed-key cmd
-                            (describe-command-to-stream cmd-without-args nil)))
-      (cond ((and (help-key-p keys)
-                  (cdr printed-key))
-             (swm-message "~{~A~^ ~} shows the bindings for the prefix map under ~{~A~^ ~}."
-                      printed-key (butlast printed-key)))
-            ((cancel-key-p keys)
-             (swm-message "Any command ending in ~A is meant to cancel any command in progress \"ABORT\".~%"
-                      (lastcar printed-key)))
-            (t (swm-message "~{~A~^ ~} is not bound." printed-key))))))
+            (let ((cmd-without-args (argument-pop
+                                     (make-argument-line :string cmd :start 0))))
+              (message-no-timeout "~{~A~^ ~} is bound to \"~A\".~%~A"
+                                  printed-key cmd
+                                  (describe-command-to-stream cmd-without-args nil)))
+            (cond ((and (help-key-p keys)
+                        (cdr printed-key))
+                   (swm-message "~{~A~^ ~} shows the bindings for the prefix map under ~{~A~^ ~}."
+                                printed-key (butlast printed-key)))
+                  ((cancel-key-p keys)
+                   (swm-message "Any command ending in ~A is meant to cancel any command in progress \"ABORT\".~%"
+                                (lastcar printed-key)))
+                  (t (swm-message "~{~A~^ ~} is not bound." printed-key))))))
 
 (defun describe-variable-to-stream (var stream)
   "Write the help for the variable to the stream."
@@ -156,10 +156,10 @@ which-key window. Two arguments will be passed to this formatter:
                 value
                 (format nil "~a.."
                         (wrap (format nil "~{~a~^~%~}"
-                                      (take *help-max-height* split))))))))
+                                      (take* *help-max-height* split))))))))
 
 (defcommand describe-variable (var) ((:variable "Describe variable: "))
-"Print the online help associated with the specified variable."
+  "Print the online help associated with the specified variable."
   (message-no-timeout "~a"
                       (with-output-to-string (s)
                         (describe-variable-to-stream var s))))
@@ -169,17 +169,17 @@ which-key window. Two arguments will be passed to this formatter:
   (format stream "function:^5 ~a^n~%" (string-downcase (symbol-name fn)))
   (when-let ((lambda-list (sb-introspect:function-lambda-list
                            (symbol-function fn))))
-    (format stream "(^5~a ^B~{~a~^ ~}^b^n)~&~%" (string-downcase (symbol-name fn)) lambda-list))
+            (format stream "(^5~a ^B~{~a~^ ~}^b^n)~&~%" (string-downcase (symbol-name fn)) lambda-list))
   (format stream "~&~a"(or (documentation fn 'function) "")))
 
 (defcommand describe-function (fn) ((:function "Describe function: "))
-"Print the online help associated with the specified function."
+  "Print the online help associated with the specified function."
   (message-no-timeout "~a"
                       (with-output-to-string (s)
                         (describe-function-to-stream fn s))))
 
 (defun find-binding-in-kmap (command keymap &key match-partial-string
-                                              match-with-arguments)
+                                                 match-with-arguments)
   "Walk through KEYMAP recursively looking for bindings that match COMMAND.
 Return a list of keybindings where each keybinding is of the form:
 
@@ -229,29 +229,29 @@ Example:
              (loop for binding in (kmap-bindings (car (dereference-kmaps
                                                        (list keymap))))
                    if (command-equal (binding-command binding))
-                     collect (list* (binding-command binding)
-                                    (format nil "~{~A~^ ~}"
-                                            (reverse (cons (key->str
-                                                            (binding-key binding))
-                                                           binding-acc)))
-                                    (reverse kmap-acc))
+                   collect (list* (binding-command binding)
+                                  (format nil "~{~A~^ ~}"
+                                          (reverse (cons (key->str
+                                                          (binding-key binding))
+                                                         binding-acc)))
+                                  (reverse kmap-acc))
                    else
-                     if (kmap-or-kmap-symbol-p (binding-command binding))
-                       append (walk-keymap (binding-command binding)
-                                           (cons (key->str (binding-key binding))
-                                                 binding-acc)
-                                           (cons
-                                            (if (kmap-p (binding-command binding))
-                                                'anonymous-keymap
-                                                (binding-command binding))
-                                            kmap-acc)))))
+                   if (kmap-or-kmap-symbol-p (binding-command binding))
+                   append (walk-keymap (binding-command binding)
+                                       (cons (key->str (binding-key binding))
+                                             binding-acc)
+                                       (cons
+                                        (if (kmap-p (binding-command binding))
+                                            'anonymous-keymap
+                                            (binding-command binding))
+                                        kmap-acc)))))
     (let ((keys (walk-keymap keymap nil (list keymap))))
       keys)))
 
 (defun find-binding (command &key match-partial-string (match-with-arguments t)
-                               (top-level-maps
-                                (cons '*top-map*
-                                      (mapcar #'cadr *group-top-maps*))))
+                                  (top-level-maps
+                                   (cons '*top-map*
+                                         (mapcar #'cadr *group-top-maps*))))
   "Return a list of all keybindings matching COMMAND as specified by
 FIND-BINDING-IN-KMAP."
   (loop for map in top-level-maps
@@ -292,13 +292,13 @@ FIND-BINDING-IN-KMAP."
                       (format nil "\"~a\" is an alias for the command \"~a\":~%"
                               (command-alias-from deref)
                               name))
-                    (when-let ((swm-message (where-is-to-stream name nil)))
-                      (format nil "~&~A~&" message))
+                    (when-let ((message (where-is-to-stream name nil)))
+                              (format nil "~&~A~&" message))
                     (when-let ((lambda-list (sb-introspect:function-lambda-list
                                              (symbol-function name))))
-                      (format nil "~%^5~a ^B~{~a~^ ~}^b^n~&~%"
-                              name
-                              lambda-list))
+                              (format nil "~%^5~a ^B~{~a~^ ~}^b^n~&~%"
+                                      name
+                                      lambda-list))
                     (format nil "~&~a" (or (documentation name 'function) "")))
                    *message-max-width*
                    nil)))
@@ -310,7 +310,7 @@ FIND-BINDING-IN-KMAP."
                     text
                     (make-even-lengths bindings))
             (format stream "~A" text))))))
-      
+
 (defcommand describe-command (com) ((:command "Describe command: "))
   "Print the online help associated with the specified command."
   (if (null (get-command-structure com nil))
@@ -328,23 +328,23 @@ FIND-BINDING-IN-KMAP."
                (string (intern (string-upcase comm)))
                (symbol comm))))
     (let ((cmd (string-downcase cmd)))
-     (if-let ((bindings (keys cmd)))
-       (format stream "\"~a\" is on ~{~a~^, ~}." cmd
-               (mapcar 'print-key-seq bindings))
-       (format stream "Command \"~a\" is not currently bound." cmd))
-     (let ((reverse-hash (make-hash-table :size (hash-table-size *command-hash*)
-                                          :test 'eq)))
-       (loop for k being each hash-key of *command-hash* using (hash-value v)
-             do (setf #1=(gethash (sym v #'command-alias-to) reverse-hash)
-                      (let ((sym (sym v #'command-alias-from)))
-                        (when (not (eql sym (sym v #'command-alias-to)))
-                          (cons sym #1#)))))
-       (when-let ((aliases (gethash (intern (string-upcase cmd)) reverse-hash)))
-         (format stream "~%\"~a\" is aliased to ~{\"~a\"~^, ~}."
-                 cmd (mapcar #'string-downcase aliases))
-         (loop for a in aliases
-               for k = #2=(keys (string-downcase (symbol-name a))) then #2#
-               when k do (format stream "~%\"~a\" is on ~{~a~^, ~}." (string-downcase a) (mapcar 'print-key-seq k))))))))
+      (if-let ((bindings (keys cmd)))
+              (format stream "\"~a\" is on ~{~a~^, ~}." cmd
+                      (mapcar 'print-key-seq bindings))
+              (format stream "Command \"~a\" is not currently bound." cmd))
+      (let ((reverse-hash (make-hash-table :size (hash-table-size *command-hash*)
+                                           :test 'eq)))
+        (loop for k being each hash-key of *command-hash* using (hash-value v)
+              do (setf #1=(gethash (sym v #'command-alias-to) reverse-hash)
+                       (let ((sym (sym v #'command-alias-from)))
+                         (when (not (eql sym (sym v #'command-alias-to)))
+                           (cons sym #1#)))))
+        (when-let ((aliases (gethash (intern (string-upcase cmd)) reverse-hash)))
+                  (format stream "~%\"~a\" is aliased to ~{\"~a\"~^, ~}."
+                          cmd (mapcar #'string-downcase aliases))
+                  (loop for a in aliases
+                        for k = #2=(keys (string-downcase (symbol-name a))) then #2#
+                        when k do (format stream "~%\"~a\" is on ~{~a~^, ~}." (string-downcase a) (mapcar 'print-key-seq k))))))))
 
 (defcommand where-is (cmd) ((:command "Where is command: "))
   "Print the key sequences bound to the specified command."
@@ -381,7 +381,7 @@ KMAPS are enabled"
     (let* ((oriented-key-seq (reverse key-seq))
            (maps (get-kmaps-at-key-seq (dereference-kmaps (top-maps)) oriented-key-seq)))
       (when-let ((only-maps (remove-if-not 'kmap-p maps)))
-        (apply 'display-bindings-for-keymaps oriented-key-seq only-maps)))))
+                (apply 'display-bindings-for-keymaps oriented-key-seq only-maps)))))
 
 (defcommand which-key-mode () ()
   "Toggle which-key-mode"
@@ -392,8 +392,8 @@ KMAPS are enabled"
 (defcommand modifiers () ()
   "List the modifiers stumpwm recognizes and what MOD-X it thinks they're on."
   (swm-message "~@{~5@a: ~{~(~a~)~^ ~}~%~}"
-           "Meta" (modifiers-meta *modifiers*)
-           "Alt" (modifiers-alt *modifiers*)
-           "Super" (modifiers-super *modifiers*)
-           "Hyper" (modifiers-hyper *modifiers*)
-           "AltGr" (modifiers-altgr *modifiers*)))
+               "Meta" (modifiers-meta *modifiers*)
+               "Alt" (modifiers-alt *modifiers*)
+               "Super" (modifiers-super *modifiers*)
+               "Hyper" (modifiers-hyper *modifiers*)
+               "AltGr" (modifiers-altgr *modifiers*)))

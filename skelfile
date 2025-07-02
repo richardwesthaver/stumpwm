@@ -18,7 +18,7 @@
  (:install ()
   (with-sudo 
    "install -m 755 stumpwm /usr/local/bin/"))
- (modules () (:install () #$cp -rf contrib $USER_SWM_DIR/contrib$#))
+ (modules () (:install () #$cp -rf contrib/ $USER_SWM_DIR/contrib$#))
  (clean ()
   #$rm -f *.fasl *.fas *.lib *.*fsl
   rm -f *.log *.fns *.fn *.aux *.cp *.ky *.log *.toc *.pg *.tp *.vr *.vrs

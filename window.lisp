@@ -1160,14 +1160,14 @@ window. Default to the current window. if
 
 (defcommand-alias other other-window)
 
-(defcommand next () ()
+(defcommand next-window () ()
   "Go to the next window in the window list."
   (let ((group (current-group)))
     (if (group-current-window group)
         (focus-next-window group)
         (other-window group))))
 
-(defcommand prev () ()
+(defcommand prev-window () ()
   "Go to the previous window in the window list."
   (let ((group (current-group)))
     (if (group-current-window group)
@@ -1286,7 +1286,7 @@ be used to override the default window formatting."
 
 (defcommand-alias windows echo-windows)
 
-(defcommand info (&optional (fmt *window-info-format*)) (:rest)
+(defcommand window-info (&optional (fmt *window-info-format*)) (:rest)
   "Display information about the current window."
   (if (current-window)
       (swm-message "~a" (format-expand *window-formatters* fmt (current-window)))

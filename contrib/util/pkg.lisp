@@ -167,7 +167,7 @@
   (:use #:cl)
   (:import-from #:stumpwm
                 #:defcommand
-                #:message
+                #:swm-message
                 #:run-shell-command)
   (:export #:*case-insensitive-regex*
            #:*exclude-keyboards*

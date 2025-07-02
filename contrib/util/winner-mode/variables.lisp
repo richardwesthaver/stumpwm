@@ -11,10 +11,10 @@
     stumpwm:pull-hidden-previous
     stumpwm:pull-marked
     stumpwm:pull-window-by-number
-    stumpwm:next
+    stumpwm:next-window
     stumpwm:next-in-frame
     stumpwm:next-urgent
-    stumpwm:prev
+    stumpwm:prev-window
     stumpwm:prev-in-frame
     stumpwm:select-window
     stumpwm:select-from-menu

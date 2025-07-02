@@ -9,12 +9,12 @@
 (defvar *preserve-history*   nil "Whether to keep binwarping history between sessions if non-nil.")
 
 (defclass binwarp-area ()
-  ((x      :initarg :x      :type 'integer :accessor x)
-   (y      :initarg :y      :type 'integer :accessor y)
-   (height :initarg :height :type 'integer :accessor height)
-   (width  :initarg :width  :type 'integer :accessor width)
-   (ptr-x                   :type 'integer :accessor ptr-x)
-   (ptr-y                   :type 'integer :accessor ptr-y)))
+  ((x      :initarg :x      :type integer :accessor x)
+   (y      :initarg :y      :type integer :accessor y)
+   (height :initarg :height :type integer :accessor height)
+   (width  :initarg :width  :type integer :accessor width)
+   (ptr-x                   :type integer :accessor ptr-x)
+   (ptr-y                   :type integer :accessor ptr-y)))
 
 (defun copy-binwarp-area (bw-area &key x y height width)
   (make-instance 'binwarp-area

@@ -13,7 +13,7 @@
   (:export #:*refresh-time* #:*prefer-sysfs*))
 
 (defpackage #:swm/net
-  (:use #:cl #:stumpwm #:cl-ppcre #:net #:cli/tools/net)
+  (:use #:cl #:std #:stumpwm #:cl-ppcre #:net #:cli/tools/net)
   (:export #:*net-device*))
 
 (defpackage #:swm/tray
@@ -27,10 +27,10 @@
    :remove-mode-line-hooks))
 
 (defpackage :swm/disk
-  (:use :cl :stumpwm :disk)
+  (:use :cl :std :stumpwm :disk)
   (:export :*disk-modeline-fmt*
            :*disk-usage-paths*))
 
-(defpkg #:swm/modeline
-  (:use #:cl #:stumpwm)
+(pkg:defpkg :swm/modeline
+  (:use #:cl #:std #:stumpwm)
   (:use-reexport #:swm/cpu #:swm/battery #:swm/net #:swm/tray #:swm/disk))

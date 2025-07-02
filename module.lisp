@@ -71,8 +71,9 @@
 (defun list-modules ()
   "Return a list of the available modules."
   (flet ((list-module (dir)
-           (pathname-name
-            (find-asd-file dir))))
+           (when-let ((f (find-asd-file dir)))
+             (pathname-name
+              (pathname f)))))
     (flatten (mapcar #'list-module *load-path*))))
 
 (defun find-module (name)

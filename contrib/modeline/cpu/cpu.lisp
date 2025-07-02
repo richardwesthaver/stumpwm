@@ -127,8 +127,9 @@ utilization."
 	  (format nil "~A-~A" (fmt-mhz minmhz) (fmt-mhz maxmhz)))
 	"")))
 
+;; can be nil when proc is cleared after kernel upgrade
 (defvar *acpi-thermal-zone*
-  (let ((proc-dir (directory-files #P"/proc/acpi/thermal_zone/"))
+  (let ((proc-dir (directory #P"/proc/acpi/thermal_zone/"))
         (sys-dir (sort
                   (remove-if-not
                    (lambda (x)
@@ -149,15 +150,17 @@ utilization."
 
 (defun fmt-cpu-temp ()
   "Returns a string representing the current CPU temperature."
-  (let ((tempval (case (car *acpi-thermal-zone*)
-                   (:procfs (parse-integer
-                             (get-proc-file-field (cdr *acpi-thermal-zone*) "temperature")
-                             :junk-allowed t))
-                   (:sysfs   (with-open-file (f (cdr *acpi-thermal-zone*))
-                               (/ (read f) 1000))))))
-    (format nil "^[~A~,1F°C^]"
-            (bar-zone-color tempval *cpu-temp-med* *cpu-temp-hi* *cpu-temp-crit*)
-            tempval)))
+  (if *acpi-thermal-zone*
+    (let ((tempval (case (car *acpi-thermal-zone*)
+                     (:procfs (parse-integer
+                               (get-proc-file-field (cdr *acpi-thermal-zone*) "temperature")
+                               :junk-allowed t))
+                     (:sysfs   (with-open-file (f (cdr *acpi-thermal-zone*))
+                                 (/ (read f) 1000))))))
+      (format nil "^[~A~,1F°C^]"
+              (bar-zone-color tempval *cpu-temp-med* *cpu-temp-hi* *cpu-temp-crit*)
+              tempval))
+    ""))
 
 (defun cpu-modeline (ml)
   (declare (ignore ml))

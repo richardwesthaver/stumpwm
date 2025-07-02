@@ -341,7 +341,7 @@ message does not time out."
 (defun message-no-timeout (fmt &rest args)
   "Like message, but the window doesn't disappear after a few seconds."
   (let ((*suppress-echo-timeout* t))
-    (apply 'message fmt args)))
+    (apply 'swm-message fmt args)))
 
 ;;; Commands
 
