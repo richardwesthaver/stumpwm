@@ -64,8 +64,7 @@
 (defsystem "stumpwm/tests"
   :name "StumpWM tests"
   :serial t
-  :depends-on ("stumpwm"
-               "rt")
+  :depends-on ("stumpwm" "rt")
   :pathname "tests/"
   :components ((:file "package")
                (:file "kmap")

@@ -1,7 +1,7 @@
 ;; Copyright (C) 2018 Stuart Dilts
-;;
+
 ;;  This file is part of stumpwm.
-;;
+
 ;; stumpwm is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2, or (at your option)
@@ -16,16 +16,13 @@
 ;; along with this software; see the file COPYING.  If not, see
 ;; <http://www.gnu.org/licenses/>.
 
-;; Commentary:
-;;
+;;; Commentary:
+
 ;; Interface declarations/implementations for interactive menus. See
 ;; menu-definitions.lisp for implementations of the generic methods
 ;; declared here.
-;;
-;; Code:
 
-;;; interactive menu
-
+;;; Code:
 (in-package #:stumpwm)
 
 (defvar *menu-map* nil
@@ -89,16 +86,16 @@
 
 (defclass single-menu (menu)
   ((unfiltered-table :initarg :filtered-table
-                   :initform nil
-                   :accessor single-menu-unfiltered-table
-                   :documentation "Holds the values that have been filtered based on
+                     :initform nil
+                     :accessor single-menu-unfiltered-table
+                     :documentation "Holds the values that have been filtered based on
 current-input and filter-pred")
    (filter-pred :initarg :filter-pred
                 :initform (error "You must specify a filter predicate")
                 :accessor single-menu-filter-pred)
    (current-input :initarg current-input
                   :initform (make-array 10 :element-type 'character
-                                        :adjustable t :fill-pointer 0)
+                                           :adjustable t :fill-pointer 0)
                   :accessor single-menu-current-input
                   :documentation "The input field for the menu."))
   (:documentation "Class used when selecting a single item in a menu. Allows searching through the list."))

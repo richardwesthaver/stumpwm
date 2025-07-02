@@ -1,4 +1,4 @@
-(in-package :dynamic-mixins-swm)
+(in-package :stumpwm)
 
 (defmethod replace-class-in-mixin ((object mixin-object)
                                    (new-class class)

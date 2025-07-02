@@ -114,8 +114,8 @@ function expects to be wrapped in a with-state for win."
 
 (defun unmap-frame-indicator-window (screen)
   "Unmap the screen's message window, if it is mapped."
-;;  (unless (eq (xlib:window-map-state (screen-frame-window screen)) :unmapped)
-    (xlib:unmap-window (screen-frame-window screen)))
+  ;;  (unless (eq (xlib:window-map-state (screen-frame-window screen)) :unmapped)
+  (xlib:unmap-window (screen-frame-window screen)))
 
 (defun unmap-all-frame-indicator-windows ()
   (mapc #'unmap-frame-indicator-window *screen-list*)
@@ -192,14 +192,14 @@ function expects to be wrapped in a with-state for win."
           (w (screen-frame-window (current-screen)))
           (string (if (stringp *frame-indicator-text*)
                       *frame-indicator-text*
-                    (prin1-to-string *frame-indicator-text*)))
+                      (prin1-to-string *frame-indicator-text*)))
           (font (screen-font (current-screen))))
       (xlib:with-state (w)
-                       (setf (xlib:drawable-x w) (+ (frame-display-x group frame)
-                                                    (truncate (- (frame-width frame) (text-line-width font string)) 2))
-                             (xlib:drawable-y w) (+ (frame-display-y group frame)
-                                                    (truncate (- (frame-height frame) (font-height font)) 2))
-                             (xlib:window-priority w) :above))
+        (setf (xlib:drawable-x w) (+ (frame-display-x group frame)
+                                     (truncate (- (frame-width frame) (text-line-width font string)) 2))
+              (xlib:drawable-y w) (+ (frame-display-y group frame)
+                                     (truncate (- (frame-height frame) (font-height font)) 2))
+              (xlib:window-priority w) :above))
       (xlib:map-window w)
       (echo-in-window w font (screen-fg-color (current-screen)) (screen-bg-color (current-screen)) string))))
 
@@ -269,8 +269,8 @@ When NEW-ON-BOTTOM-P is non-nil, new messages are queued at the bottom."
     (values (append top bot)
             (append top-highlights
                     (loop for idx in bot-highlights
-                       with offset = (length top)
-                       collect (+ idx offset))))))
+                          with offset = (length top)
+                          collect (+ idx offset))))))
 
 (defun echo-string-list (screen strings &rest highlights)
   "Draw each string in l in the screen's message window. HIGHLIGHT is
@@ -305,9 +305,9 @@ When NEW-ON-BOTTOM-P is non-nil, new messages are queued at the bottom."
             (cancel-timer *message-window-timer*)
             (setf *message-window-timer* nil))
           (reset-message-window-timer
-            (if (> (length strings) 1)
-                (or *timeout-wait-multiline* *timeout-wait*)
-                *timeout-wait*))))
+           (if (> (length strings) 1)
+               (or *timeout-wait-multiline* *timeout-wait*)
+               *timeout-wait*))))
     (push-last-message screen strings highlights)
     (xlib:display-finish-output *display*)
     (dformat 5 "Outputting a message:~%~{        ~a~%~}" strings)

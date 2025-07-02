@@ -29,8 +29,8 @@
 (defun entries-from-nested-list (lst)
   (mapcar (lambda (x)
             (make-instance 'menu-entry
-                           :label (car x)
-                           :data (cadr x)))
+              :label (car x)
+              :data (cadr x)))
           lst))
 
 (defmethod menu-entry-display ((entry menu-entry))
@@ -197,14 +197,14 @@ unmark the entry at the selected point."
   (menu-prompt menu))
 
 (defun menu-prompt-visible (menu)
-    (or (menu-prompt menu)
-        (> (length (single-menu-current-input menu)) 0)))
+  (or (menu-prompt menu)
+      (> (length (single-menu-current-input menu)) 0)))
 
 (defmethod menu-prompt-line ((menu single-menu))
   "When a prompt is shown, also show the search string."
   (when (menu-prompt-visible menu)
-      (format nil "~@[~A ~]~A"
-              (menu-prompt menu) (single-menu-current-input menu))))
+    (format nil "~@[~A ~]~A"
+            (menu-prompt menu) (single-menu-current-input menu))))
 
 (defmethod typing-action ((menu menu) key-seq)
   "Default action is to do nothing"
@@ -318,9 +318,9 @@ more spaces; ARGUMENT-POP is used to split the string)."
 
 
 (defun select-from-menu (screen table &optional (prompt "Search:")
-                                        (initial-selection 0)
-                                        extra-keymap
-                                        (filter-pred #'menu-item-matches-regexp))
+                                                (initial-selection 0)
+                                                extra-keymap
+                                                (filter-pred #'menu-item-matches-regexp))
   "Prompt the user to select from a menu on SCREEN. TABLE can be
 a list of values or a nested list. If it's a nested list, the first
 element in the sublist is displayed in the menu. What is displayed
@@ -343,21 +343,21 @@ Returns the selected element in TABLE or nil if aborted. "
 
   (when table
     (let ((menu (make-instance 'single-menu
-                               :table (if (every #'listp table)
-                                          table
-                                          (mapcar #'list table))
-                               :selected initial-selection
-                               :prompt prompt
-                               :view-start 0
-                               :view-end 0
-                               :additional-keymap extra-keymap
-                               :FILTER-PRED filter-pred)))
+                  :table (if (every #'listp table)
+                             table
+                             (mapcar #'list table))
+                  :selected initial-selection
+                  :prompt prompt
+                  :view-start 0
+                  :view-end 0
+                  :additional-keymap extra-keymap
+                  :FILTER-PRED filter-pred)))
       (run-menu screen menu))))
 
 (defun select-from-batch-menu (screen table &key (prompt "Select:")
-                                              allowed-markers
-                                              (initial-selection 0)
-                                              extra-keymap)
+                                                 allowed-markers
+                                                 (initial-selection 0)
+                                                 extra-keymap)
   "Prompt the user with a menu that allows them to mark each item
 with a character. They can exit the menu by pressing enter, or
 whatever key is mapped to 'menu-finish' in *menu-map*. Value returned
@@ -377,16 +377,16 @@ EXTRA-KEYMAP can be a keymap whose bindings will take precedence
   (check-type allowed-markers list)
   (when table
     (let ((menu (make-instance 'batch-menu
-                               :table table
-                               :prompt prompt
-                               :allowed-markers allowed-markers
-                               :selected initial-selection
-                               :additional-keymap extra-keymap)))
+                  :table table
+                  :prompt prompt
+                  :allowed-markers allowed-markers
+                  :selected initial-selection
+                  :additional-keymap extra-keymap)))
       (run-menu screen menu))))
 
 (defun command-menu (screen items command-list &key (prompt "Select:")
-                                                   (initial-selection 0)
-                                                   extra-keymap)
+                                                    (initial-selection 0)
+                                                    extra-keymap)
   "Use batch-menu to make selections and run commands specified in command-list.
 
 SCREEN: The screen to display the menu on.
@@ -404,16 +404,16 @@ COMMAND-LIST: A list of entries defining the commands associated with each mark.
               Example:
                  '((#\d 'delete-window) (#\m 'move-multiple-windows :all))"
   (let ((results
-         (select-from-batch-menu screen items
-                                 :prompt prompt
-                                 ;; use the first value of every entry
-                                 ;; except when it is nill:
-                                 :allowed-markers (mapcan (lambda (x)
-                                                            (if (first x)
-				                                (list (first x))))
-                                                          command-list)
-                                 :initial-selection initial-selection
-                                 :extra-keymap extra-keymap)))
+          (select-from-batch-menu screen items
+                                  :prompt prompt
+                                  ;; use the first value of every entry
+                                  ;; except when it is nill:
+                                  :allowed-markers (mapcan (lambda (x)
+                                                             (if (first x)
+				                                 (list (first x))))
+                                                           command-list)
+                                  :initial-selection initial-selection
+                                  :extra-keymap extra-keymap)))
     (dolist (command-entry command-list)
       (let ((selections (assoc (first command-entry) results))
             (func (second command-entry))

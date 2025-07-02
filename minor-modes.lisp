@@ -18,6 +18,7 @@
 ;; Boston, MA 02111-1307 USA
 
 ;;; Commentary:
+
 ;; This file implements minor modes for StumpWM. Minor modes are implemented as
 ;; mixins which get added to a scope object to allow overriding methods which
 ;; are called upon that object. Minor modes are defined with the macro
@@ -31,7 +32,7 @@
 (defvar *minor-mode*)
 
 (setf (documentation '*minor-mode* 'variable)
-"A dynamic variable bound to the minor mode object when executing a minor mode
+      "A dynamic variable bound to the minor mode object when executing a minor mode
 command.")
 
 ;;; General Hooks
@@ -296,7 +297,7 @@ current objects if MINOR-MODE is global"
   (loop for class in *active-global-minor-modes*
         when (and (not (typep object class)) ; Dont autoenable if already enabled
                   (typep object (scope-type (minor-mode-scope class))))
-          do (autoenable-minor-mode class object)))
+        do (autoenable-minor-mode class object)))
 
 (defun sync-all-minor-modes ()
   "Loop through all recently created objects and ensure that the appropriate minor
@@ -312,14 +313,14 @@ modes are enabled in them, then nullify the list of objects."
 (defun replace-class-and-sync (object new-class &rest initargs)
   "Replaces the main class in OBJECT with the new class, and then syncs all minor
 modes."
-  (apply #'dynamic-mixins-swm:replace-class object new-class initargs)
+  (apply #'replace-class object new-class initargs)
   (sync-minor-modes object))
 
 (defun list-modes (object)
   "List all minor modes followed by the major mode for OBJECT."
   (sync-all-minor-modes)
-  (when (typep object 'dynamic-mixins-swm:mixin-object)
-    (mapcar #'class-name (dynamic-mixins-swm:mixin-classes (class-of object)))))
+  (when (typep object 'mixin-object)
+    (mapcar #'class-name (mixin-classes (class-of object)))))
 
 (defun list-minor-modes (object)
   "List all minor modes active in OBJECT"
@@ -335,7 +336,7 @@ modes."
                       append (screen-heads screen)))
          (frames (loop for group in groups
                        when (typep group 'tile-group)
-                         append (flatten (tile-group-frame-tree group))))
+                       append (flatten (tile-group-frame-tree group))))
          (windows (loop for group in groups
                         append (group-windows group))))
     (append windows frames heads groups screens (list *unscoped-minor-modes*))))
@@ -418,8 +419,8 @@ modes."
 ;;; Helper Functions
 
 (defun generate-keymap (keymap-spec &optional
-                                      (top-map (stumpwm:make-sparse-keymap))
-                                      (filter-bindings #'identity))
+                                    (top-map (stumpwm:make-sparse-keymap))
+                                    (filter-bindings #'identity))
   "Generate a (potentially nested) keymap based on KEYMAP. KEYMAP is a list of
 keymap specs, where each spec is a cons cell containing an input sequence and
 something to bind it to. The input sequence is a string representing an
@@ -456,19 +457,19 @@ empty keymap."
                                (bind-it key)))
                            (setf curmap bind)))
                       (bind
-                       (restart-case (error "~S in ~S is already bound to ~A"
-                                            (stumpwm::print-key (stumpwm:kbd key))
-                                            seq
-                                            bind)
-                         (replace-binding ()
-                           :report
-                           (lambda (s)
-                             (format s "Replace with binding ~A"
-                                     (if (null rest)
-                                         bind-to
-                                         (format nil "the keymap ~{~A~^ ~}"
-                                                 rest))))
-                           (bind-it key))))
+                          (restart-case (error "~S in ~S is already bound to ~A"
+                                               (stumpwm::print-key (stumpwm:kbd key))
+                                               seq
+                                               bind)
+                            (replace-binding ()
+                              :report
+                              (lambda (s)
+                                (format s "Replace with binding ~A"
+                                        (if (null rest)
+                                            bind-to
+                                            (format nil "the keymap ~{~A~^ ~}"
+                                                    rest))))
+                              (bind-it key))))
                       ((null rest)
                        (bind-it key))
                       (t (let ((m (stumpwm:make-sparse-keymap)))
@@ -477,7 +478,7 @@ empty keymap."
                   (traverse-and-bind (seq)
                     (loop for (key . rest) on (cl-ppcre:split " " seq)
                           do (let ((bind (stumpwm:lookup-key curmap
-                                                             (stumpwm:kbd key))))
+                                           (stumpwm:kbd key))))
                                (attempt-binding key rest bind seq)))))
                (if (not (or (symbolp bind-to)
                             (stringp bind-to)
@@ -589,7 +590,7 @@ ROOT-MAP-SPEC."
                          ;; conforms to that type.
                          `((typep obj ',(third optarg))))
                      (enable-when mode obj))
-            (prog1 (dynamic-mixins-swm:ensure-mix obj ',mode)
+            (prog1 (ensure-mix obj ',mode)
               (handler-bind ((minor-mode-hook-error
                                (lambda (c)
                                  (let ((r (find-restart 'continue c)))
@@ -605,7 +606,7 @@ ROOT-MAP-SPEC."
                                (when r
                                  (invoke-restart r))))))
             (run-hook-for-minor-mode #'minor-mode-disable-hook ',mode obj t))
-          (dynamic-mixins-swm:delete-from-mix obj ',mode)))))
+          (delete-from-mix obj ',mode)))))
 
   (defun genlighter (mode lighter)
     (cond ((null lighter)
@@ -639,23 +640,23 @@ ROOT-MAP-SPEC."
   (defun define-hooks (mode)
     `((defvar ,(make-special-variable-name mode 'enable-hook) nil
         ,(format nil
-"A hook run when enabling ~A, called with the mode symbol and the scope object."
+                 "A hook run when enabling ~A, called with the mode symbol and the scope object."
                  mode))
       (defvar ,(make-special-variable-name mode 'disable-hook) nil
         ,(format nil
-"A hook run when disabling ~A, called with the mode symbol and the scope
+                 "A hook run when disabling ~A, called with the mode symbol and the scope
 object. This hook is run when ~A is disabled in an object, however if an object
 goes out of scope before a minor mode is disabled then this hook will not be run
 for that object."
                  mode mode))
       (defvar ,(make-special-variable-name mode 'hook) nil
         ,(format nil
-"A hook run when explicitly enabling ~A, called with the mode symbol and the
+                 "A hook run when explicitly enabling ~A, called with the mode symbol and the
 scope object."
                  mode))
       (defvar ,(make-special-variable-name mode 'destroy-hook) nil
         ,(format nil
-"A hook run when explicitly disabling ~A, called with the mode symbol and the
+                 "A hook run when explicitly disabling ~A, called with the mode symbol and the
 scope object."
                  mode))
       (defmethod minor-mode-enable-hook ((mode (eql ',mode)))
@@ -713,11 +714,11 @@ DESIGNATOR in the minor mode scope hash table."
         (loop for object in (list-mode-objects nil)
               when (and (typep object type)
                         (typep object filter))
-                collect object))))
+              collect object))))
   (defun find-active-global-minor-modes-for-scope (scope)
     (loop for mode in *active-global-minor-modes*
           when (eql scope (minor-mode-scope mode))
-            collect mode)))
+          collect mode)))
 
 (defgeneric validate-superscope (scope superscope)
   (:documentation
@@ -736,7 +737,7 @@ otherwise invalid superscope."))
     (loop for super in superclasses
           when (or (eq super s)
                    (superclassp (class-name super) superclass))
-            do (return-from superclassp t))))
+          do (return-from superclassp t))))
 
 (defun validate-scope (scope superclasses &key (errorp t))
   "Validate a scope for a set of superclasses. SCOPE must be a designator as
@@ -792,7 +793,7 @@ thunk body which returns the current object for this scope."
 
 (defmacro define-descended-minor-mode-scope (designator parent
                                              &key class filter-type
-                                               retrieve-current-object)
+                                                  retrieve-current-object)
   "Define a descended scope which inherits the parents type and functions unless
 provided."
   `(eval-when (:compile-toplevel :load-toplevel :execute)
@@ -998,11 +999,11 @@ Example:
   (multiple-value-bind (mm-opts other-opts)
       (parse-minor-mode-options options)
     (destructuring-bind (&key top-map root-map (expose-keymaps t) rebind
-                           lighter lighter-make-clickable lighter-on-click
-                           (scope :unscoped) interactive global
-                           (enable-when nil ewpp) mix-before mix-after
-                           (make-hooks t) (define-command-definer t)
-                           default-initargs)
+                              lighter lighter-make-clickable lighter-on-click
+                              (scope :unscoped) interactive global
+                              (enable-when nil ewpp) mix-before mix-after
+                              (make-hooks t) (define-command-definer t)
+                              default-initargs)
         mm-opts
       (when lighter-on-click
         (setf lighter-make-clickable t))
@@ -1052,9 +1053,9 @@ Example:
                        (mix-b (mapcar #'mkc mix-before)))
                    ;; Convert to explicit #'CONS calls to allow destructive
                    ;; modification of data at runtime.
-                   `((dynamic-mixins-swm::set-mix-rule ',mode
-                                                   (list ,@mix-b)
-                                                   (list ,@mix-a))))))
+                   `((set-mix-rule ',mode
+                                   (list ,@mix-b)
+                                   (list ,@mix-a))))))
            
            ,(if global 
                 `(defmethod minor-mode-global-p ((mode (eql ',mode))) t)

@@ -1,7 +1,7 @@
 ;; Copyright (C) 2003-2008 Shawn Betts
-;;
+
 ;;  This file is part of stumpwm.
-;;
+
 ;; stumpwm is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2, or (at your option)
@@ -415,7 +415,7 @@ Use the window's resource name.
     :accessor swm-class-new-objects
     :allocation :class
     :documentation
-"Track all newly created objects in order to mix in the appropriate minor modes
+    "Track all newly created objects in order to mix in the appropriate minor modes
 when they are touched")))
 
 (defmethod initialize-instance :after ((obj swm-class) &key &allow-other-keys)
@@ -447,18 +447,18 @@ make-instance."
     (prog1 object
       (loop for class in *active-global-minor-modes*
             when (typep object (scope-type (minor-mode-scope class)))
-              do (autoenable-minor-mode class object))
+            do (autoenable-minor-mode class object))
       (setf (swm-class-new-objects object)
             (remove object (swm-class-new-objects object) :test #'eq)))))
 
 (defmacro define-swm-class (class-name superclasses slots &rest options)
-  "Define a class and a method for DYNAMIC-MIXINS:REPLACE-CLASS which specializes
+  "Define a class and a method for REPLACE-CLASS which specializes
 upon the class and replaces it. If SUPERCLASSES is NIL then (SWM-CLASS) is used."
   (unless superclasses (setq superclasses '(swm-class)))
   `(progn
      (defclass ,class-name ,superclasses ,slots ,@options)
-     (defmethod dynamic-mixins-swm:replace-class ((object ,class-name) new &rest r)
-       (apply #'dynamic-mixins-swm:replace-class-in-mixin
+     (defmethod replace-class ((object ,class-name) new &rest r)
+       (apply #'replace-class-in-mixin
               object new ',class-name r))))
 
 (define-swm-class frame ()
@@ -571,19 +571,19 @@ upon the class and replaces it. If SUPERCLASSES is NIL then (SWM-CLASS) is used.
    (frame-outline-width :initarg :frame-outline-width :accessor screen-frame-outline-width)
    (fonts :initarg :fonts :accessor screen-fonts)
    (mapped-windows :initform () :accessor screen-mapped-windows :documentation
-    "A list of all mapped windows. These are the raw xlib:window's. window structures are stored in groups.")
+                   "A list of all mapped windows. These are the raw xlib:window's. window structures are stored in groups.")
    (withdrawn-windows :initform () :accessor screen-withdrawn-windows :documentation
-    "A list of withdrawn windows. These are of type stumpwm::window
+                      "A list of withdrawn windows. These are of type stumpwm::window
 and when they're mapped again they'll be put back in the group
 they were in when they were unmapped unless that group doesn't
 exist, in which case they go into the current group.")
    (urgent-windows :initform () :accessor screen-urgent-windows :documentation
-    "a list of windows for which (window-urgent-p) currently true.")
+                   "a list of windows for which (window-urgent-p) currently true.")
    (input-window :initarg :input-window :reader screen-input-window)
    (key-window :initarg :key-window :reader screen-key-window :documentation
-    "the window that accepts further keypresses after a toplevel key has been pressed.")
+               "the window that accepts further keypresses after a toplevel key has been pressed.")
    (focus-window :initarg :focus-window :reader screen-focus-window :documentation
-    "The window that gets focus when no window has focus")
+                 "The window that gets focus when no window has focus")
    (frame-window :initarg :frame-window :reader screen-frame-window)
    (frame-outline-gc :initarg :frame-outline-gc :reader screen-frame-outline-gc)
    ;; color contexts
@@ -592,7 +592,7 @@ exist, in which case they go into the current group.")
    (color-map-normal :initform nil :accessor screen-color-map-normal)
    (color-map-bright :initform nil :accessor screen-color-map-bright)
    (ignore-msg-expose :initform 0 :accessor screen-ignore-msg-expose :documentation
-    "used to ignore the first expose even when mapping the message window.")
+                      "used to ignore the first expose even when mapping the message window.")
    ;; the window that has focus
    (focus :initform nil :accessor screen-focus)
    (current-msg :initform nil :accessor screen-current-msg)
@@ -685,9 +685,9 @@ chosen, resignal the error."
     `(handler-bind
          ((warning #'muffle-warning)
           ((or serious-condition error)
-           (lambda (,c)
-             (restarts-menu ,c)
-             (signal ,c))))
+            (lambda (,c)
+              (restarts-menu ,c)
+              (signal ,c))))
        ,@body)))
 
 ;;; Hook functionality
@@ -722,11 +722,11 @@ display a message whenever you switch frames:
   `(setf ,hook (adjoin ,fn ,hook)))
 
 (defmacro remove-hook (hook fn)
-"Remove the specified function from the hook."
+  "Remove the specified function from the hook."
   `(setf ,hook (remove ,fn ,hook)))
 
 (defmacro remove-all-hooks (hook)
-"Remove all functions from a hook"
+  "Remove all functions from a hook"
   `(setf ,hook NIL))
 
 ;; Misc. utility functions
@@ -797,9 +797,9 @@ string which is split to obtain the individual regexps. "
                       regexps
                       (split-string regexps " "))))
     (loop for pattern in regexps
-       always (let ((scanner (ppcre:create-scanner pattern
-                                                   :case-insensitive-mode case-insensitive)))
-                (ppcre:scan scanner target-string)))))
+          always (let ((scanner (ppcre:create-scanner pattern
+                                                      :case-insensitive-mode case-insensitive)))
+                   (ppcre:scan scanner target-string)))))
 
 (defun insert-before (list item nth)
   "Insert ITEM before the NTH element of LIST."
@@ -856,9 +856,9 @@ Example using strings:
       for replacement vector in replacements
       ;; Insert text between last replacement up until current, unless there is none
       unless (zerop (- start prev-end)) do
-        (replace composed vec
-                 :start1 (+ prev-end offset)
-                 :start2 prev-end :end2 start)
+         (replace composed vec
+                  :start1 (+ prev-end offset)
+                  :start2 prev-end :end2 start)
 
       do (replace composed replacement
                   :start1 (+ start offset))
@@ -898,10 +898,10 @@ Does not trim if `TRIM-COUNT' is nil, and returns the empty string if it is zero
                          (let* ((offset-pos (1+ pos))
                                 (next-char (char str offset-pos)))
                            (let* ((trim-count (when (digit-char-p next-char)
-                                                  ;; Read till length of digits and parse it
-                                                  (let ((end-digits (position-if (complement #'digit-char-p) str :start offset-pos)))
-                                                    (prog1 (parse-integer str :start offset-pos :end end-digits)
-                                                      (incf offset-pos (- end-digits offset-pos))))))
+                                                ;; Read till length of digits and parse it
+                                                (let ((end-digits (position-if (complement #'digit-char-p) str :start offset-pos)))
+                                                  (prog1 (parse-integer str :start offset-pos :end end-digits)
+                                                    (incf offset-pos (- end-digits offset-pos))))))
                                   (trim-end-p (when (char= (char str offset-pos) #\^)
                                                 (incf offset-pos) t)))
                              ;; length pos is offset (after percents, past padding specifier and ^) + 1 (past expander-char)
@@ -943,13 +943,13 @@ Does not trim if `TRIM-COUNT' is nil, and returns the empty string if it is zero
                               (string-shorten str trim-count trim-end-p)))))
            ;; loop start, check before update is to handle the values from initially form
         if expander-char
-          collect (list start end) into ranges
+        collect (list start end) into ranges
         ;; Same as in cond, insert or leave in
-          and collect (or (handle-expander) (subseq str start end)) into replacements
+        and collect (or (handle-expander) (subseq str start end)) into replacements
         else
-          ;; string-replace-ranges will effectively erase unescaped percents, by not bothering adding them.
-          collect (list (+ start trim-count) end) into ranges
-          and collect "" into replacements
+        ;; string-replace-ranges will effectively erase unescaped percents, by not bothering adding them.
+        collect (list (+ start trim-count) end) into ranges
+        and collect "" into replacements
         end
         do (update-loop)
         while start ; While there are expanders/escapes, will always be a start pos.
@@ -1402,7 +1402,7 @@ of :error."
      (ensure-data-dir)
      (with-open-file (,s ,(merge-pathnames file *data-dir*)
                          ,@keys)
-                     ,@body)))
+       ,@body)))
 
 (defun rotate-log ()
   (let ((log-filename (merge-pathnames "stumpwm.log" *data-dir*))
@@ -1422,16 +1422,16 @@ of :error."
     (makunbound '*debug-stream*)))
 
 (defmacro move-to-head (list elt)
-   "Move the specified element in in LIST to the head of the list."
- `(progn
-    (setf ,list (remove ,elt ,list))
-    (push ,elt ,list)))
+  "Move the specified element in in LIST to the head of the list."
+  `(progn
+     (setf ,list (remove ,elt ,list))
+     (push ,elt ,list)))
 
 (define-condition stumpwm-condition (condition)
   ((swm-message :initarg :message :reader warning-message))
   (:documentation "Any stumpmwm specific condition should inherit from this.")
   (:report (lambda (condition stream)
-            (format stream "~A~%" (warning-message condition)))))
+             (format stream "~A~%" (warning-message condition)))))
 
 (define-condition stumpwm-error (stumpwm-condition error)
   ()

@@ -38,7 +38,7 @@ the maximum line width."
     (declare (ignorable optionals rest keys aux))
     (macrolet ((with-bind-check
                    ((var list &optional (argtypes '(&optional &rest &key &aux))
-                         (dispatcher 'dispatch-format))
+                                        (dispatcher 'dispatch-format))
                     &body body)
                  (let ((l (gensym)))
                    `(let* ((,l ,list)
@@ -143,17 +143,17 @@ the maximum line width."
 
 (defun generate-variable-doc (s line)
   (ppcre:register-groups-bind (name) ("^### (.*)" line)
-                              (let ((sym (find-symbol (string-upcase name) :stumpwm)))
-                                (format s "@defvar ~a~%~a~&@end defvar~%~%"
-                                        name (documentation sym 'variable))
-                                t)))
+    (let ((sym (find-symbol (string-upcase name) :stumpwm)))
+      (format s "@defvar ~a~%~a~&@end defvar~%~%"
+              name (documentation sym 'variable))
+      t)))
 
 (defun generate-hook-doc (s line)
   (ppcre:register-groups-bind (name) ("^\\$\\$\\$ (.*)" line)
-                              (let ((sym (find-symbol (string-upcase name) :stumpwm)))
-                                (format s "@defvr {Hook} ~a~%~a~&@end defvr~%~%"
-                                        name (documentation sym 'variable))
-                                t)))
+    (let ((sym (find-symbol (string-upcase name) :stumpwm)))
+      (format s "@defvr {Hook} ~a~%~a~&@end defvr~%~%"
+              name (documentation sym 'variable))
+      t)))
 
 (defun generate-command-doc (s line)
   (ppcre:register-groups-bind (name) ("^!!! (.*)" line)
@@ -202,10 +202,10 @@ the maximum line width."
       (with-open-file (is in :direction :input)
         (loop for line = (read-line is nil is)
               until (eq line is) do
-              (or (generate-function-doc os line)
-                  (generate-macro-doc os line)
-                  (generate-hook-doc os line)
-                  (generate-variable-doc os line)
-                  (generate-command-doc os line)
-                  (generate-class-doc os line)
-                  (write-line line os)))))))
+                 (or (generate-function-doc os line)
+                     (generate-macro-doc os line)
+                     (generate-hook-doc os line)
+                     (generate-variable-doc os line)
+                     (generate-command-doc os line)
+                     (generate-class-doc os line)
+                     (write-line line os)))))))

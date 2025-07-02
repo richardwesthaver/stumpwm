@@ -1,7 +1,7 @@
 ;; Copyright (C) 2003-2008 Shawn Betts
-;;
+
 ;;  This file is part of stumpwm.
-;;
+
 ;; stumpwm is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2, or (at your option)
@@ -16,12 +16,11 @@
 ;; along with this software; see the file COPYING.  If not, see
 ;; <http://www.gnu.org/licenses/>.
 
-;; Commentary:
-;;
-;; Handle the X selection.
-;;
-;; Code:
+;;; Commentary:
 
+;; Handle the X selection.
+
+;;; Code:
 (in-package #:stumpwm)
 
 (defvar *default-selections* '(:primary)
@@ -62,8 +61,8 @@
 (defun set-x-selection (text &optional (selection *default-selections*))
   "Set the X11 selection string to @var{string}."
   (multiselect selection
-               (setf (getf *x-selection* selection) text)
-               (export-selection selection)))
+    (setf (getf *x-selection* selection) text)
+    (export-selection selection)))
 
 (defun send-selection (requestor property selection target time)
   (dformat 1 "send-selection ~s ~s ~s ~s ~s~%" requestor property selection target time)
@@ -91,14 +90,13 @@
     (t
      (setf property nil)))
   (xlib:send-event requestor :selection-notify nil
-                   :display *display*
-                   :window requestor
-                   :selection selection
-                   :property property
-                   :target target
-                   :time time)
+                             :display *display*
+                             :window requestor
+                             :selection selection
+                             :property property
+                             :target target
+                             :time time)
   (xlib:display-finish-output *display*))
-
 
 (defun get-x-selection (&optional timeout (selection *default-selections*))
   "Return the x selection no matter which client owns it."
@@ -119,11 +117,10 @@
                     when (or ret
                              (> (/ (- time (get-internal-real-time)) internal-time-units-per-second)
                                 timeout))
-                      ;; make sure we return a string
-                      return (or ret ""))))))))
+                    ;; make sure we return a string
+                    return (or ret ""))))))))
 
 ;;; Commands
-
 ;;; FIXME: These two commands are basically useless. See issue #673 for details.
 (defcommand putsel (string) ((:rest "text: "))
   "Stuff the string @var{string} into the x selection."
