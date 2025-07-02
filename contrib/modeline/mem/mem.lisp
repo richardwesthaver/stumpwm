@@ -56,12 +56,6 @@ total amount of memory, allocated memory, allocated/total ratio"
   (let ((cpu (truncate (* 100 (nth 2 mem)))))
     (stumpwm:bar cpu *mem-usage-bar-width* *mem-usage-bar-full* *mem-usage-bar-empty*)))
 
-(defun mem-modeline (ml)
-  (declare (ignore ml))
-  (format-expand *mem-formatters-alist*
-                 *mem-modeline-fmt*
-                 (mem-usage)))
-
 (defvar *mem-formatters-alist*
   '((#\a  fmt-mem-allocated)
     (#\p  fmt-mem-percent)
@@ -81,3 +75,8 @@ Percent of used memory
 Bar graph of current memory allocation
 @end table")
 
+(defun mem-modeline (ml)
+  (declare (ignore ml))
+  (format-expand *mem-formatters-alist*
+                 *mem-modeline-fmt*
+                 (mem-usage)))

@@ -162,11 +162,6 @@ utilization."
               tempval))
     ""))
 
-(defun cpu-modeline (ml)
-  (declare (ignore ml))
-  (format-expand *cpu-formatters-alist*
-                 *cpu-modeline-fmt*))
-
 (defvar *cpu-formatters-alist*
   '((#\c  fmt-cpu-usage)
     (#\C  fmt-cpu-usage-bar)
@@ -192,3 +187,8 @@ CPU frequency range
 CPU temperature
 @end table
 ")
+
+(defun cpu-modeline (ml)
+  (declare (ignore ml))
+  (format-expand *cpu-formatters-alist*
+                 *cpu-modeline-fmt*))

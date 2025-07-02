@@ -1,6 +1,6 @@
 ;;; ~/comp/ext/stumpwm/contrib/util/util.asd --- Util Sytem Definitions
 (defsystem :util
-  :depends-on (:std :stumpwm :dat :clx :clx-truetype :cl-ppcre)
+  :depends-on (:std :stumpwm :dat :clx :clx/truetype :cl-ppcre)
   :components ((:file "pkg")
                (:module "golden-ratio"
                 :components ((:file "golden-ratio")))

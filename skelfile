@@ -7,7 +7,7 @@
   :dir-locals
   ((nil . ((indent-tabs-mode . nil)))
    (makefile-mode . ((indent-tabs-mode . t)))))
- #+nil (sbcl :env "/usr/local/bin/core")
+ #+nil (sbcl :env "/usr/local/bin/sbcl")
  (user-swm-dir :env (merge-homedir-pathnames ".stumpwm.d")))
 :vc (:hg "https://vc.compiler.company/ext/stumpwm"
      (upstream (:git "https://github.com/stumpwm/stumpwm"))

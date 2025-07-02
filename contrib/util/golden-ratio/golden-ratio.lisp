@@ -10,6 +10,7 @@
   (- target current-px))
 
 (defun resize-to-golden-ratio (to-frame from-frame)
+  (declare (ignore from-frame))
   (when (and *golden-ratio-on* (not (stumpwm::single-frame-p)))
     (let* ((target-x (target-px (stumpwm::head-width (current-head))))
            (target-y (target-px (stumpwm::head-height (current-head)))))
@@ -25,4 +26,4 @@
   "Toggle golden ratio"
   (setf *golden-ratio-on* (null *golden-ratio-on*)))
 
-(add-hook *focus-frame-hook* 'resize-to-golden-ratio)
+;; (add-hook *focus-frame-hook* 'resize-to-golden-ratio)

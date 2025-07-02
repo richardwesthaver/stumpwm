@@ -1,5 +1,4 @@
 ;;;; net.lisp
-
 (in-package #:swm/net)
 
 ;;; "net" goes here. Hacks and glory await!
@@ -9,7 +8,6 @@
 ;;; Copyright 2009 Vitaly Mayatskikh
 ;;;
 ;;; Maintainer:
-;;;
 
 ;; Install formatters.
 (add-screen-mode-line-formatter #\l 'net-modeline)
@@ -30,10 +28,7 @@
 (defconstant +gateway+ 2)
 (defconstant +flags+ 3)
 (defconstant +mask+ 7)
-(handler-bind
-    #+sbcl ((SB-EXT:DEFCONSTANT-UNEQL
-                #'(lambda (condition) (continue))))
-    (defconstant +ipv4-zero+ "00000000"))
+(define-constant +ipv4-zero+ "00000000" :test 'equal)
 
 (defun now ()
   (/ (get-internal-real-time) internal-time-units-per-second))
@@ -157,11 +152,6 @@ For the second case rescans route table every minute."
 (defun fmt-ipv6 ()
   (or *net-ipv6* "noip"))
 
-(defun net-modeline (ml)
-  (declare (ignore ml))
-  (format-expand *net-formatters-alist*
-                 *net-modeline-fmt*))
-
 (defvar *net-formatters-alist*
   '((#\d  net-device)
     (#\u  fmt-net-usage)
@@ -180,3 +170,8 @@ network device name
 network usage
 @end table
 ")
+
+(defun net-modeline (ml)
+  (declare (ignore ml))
+  (format-expand *net-formatters-alist*
+                 *net-modeline-fmt*))

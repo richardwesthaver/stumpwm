@@ -130,6 +130,7 @@ HEIGHT are subtracted."
       (dolist (f frameset)
         (multiple-value-bind (s e offset)
             (stumpwm::get-edge f opposite)
+          (declare (ignore s e))
           (let ((offset-diff (abs (- src-offset offset))))
             (if nearest-edge-diff
                 (if (< offset-diff nearest-edge-diff)

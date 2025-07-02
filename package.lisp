@@ -20,7 +20,7 @@
 
 ;;; Code:
 (defpackage :stumpwm
-  (:use #:cl #:std)
+  (:use #:cl #:std #:obj/meta/mixin)
   (:import-from #:sb-debug #:print-backtrace #:backtrace)
   (:shadow #:yes-or-no-p #:y-or-n-p)
   (:export 

@@ -1052,7 +1052,7 @@ Example:
                        (mix-b (mapcar #'mkc mix-before)))
                    ;; Convert to explicit #'CONS calls to allow destructive
                    ;; modification of data at runtime.
-                   `((dynamic-mixins-swm::set-rule ',mode
+                   `((dynamic-mixins-swm::set-mix-rule ',mode
                                                    (list ,@mix-b)
                                                    (list ,@mix-a))))))
            

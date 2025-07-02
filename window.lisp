@@ -1231,7 +1231,7 @@ formatting. This is a simple wrapper around the command @command{windowlist}."
 
 (defcommand-alias insert window-send-string)
 
-(defcommand mark (&optional (win (current-window)) (swm-message t)) ()
+(defcommand mark (&optional (win (current-window)) (message t)) ()
 "Toggle a window's mark. The optional argument WIN controls which window is
 marked and defaults to the current window. The optional argument MESSAGE
 controls whether or not to display a message to the user indicating that WIN has

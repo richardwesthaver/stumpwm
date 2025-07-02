@@ -25,7 +25,6 @@
 
 (in-package #:stumpwm)
 
-
 (defvar *module-dir*
   (directory-path (concat (sb-posix:getenv "HOME") "/.stumpwm.d/modules"))
   "The location of the contrib modules on your system.")
@@ -113,4 +112,3 @@ with the argument `*module-dir*'"
     (if module
         (asdf:operate 'asdf:load-op module)
         (error "Could not load or find module: ~s" name))))
-;; End of file
