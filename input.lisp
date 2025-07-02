@@ -44,9 +44,7 @@
           read-one-char
           read-one-line))
 
-
 ;;; General Utilities
-
 (defun take (n list)
   "Returns a list with the first n elements of the given list, and the
 remaining tail of the list as a second value."
@@ -65,13 +63,10 @@ remaining tail of the list as a second value."
              (length seq1))))
     (apply #'min (map-product #'longest-common-prefix-2 seqs seqs))))
 
-
 (defstruct input-line
   string position history history-bk password most-recent-dead-key)
 
-
 ;;; completion styles
-
 (defgeneric input-completion-reset (completion-style completions)
   (:documentation "A completion style should implement this function
 and reset its state when called."))
@@ -575,9 +570,7 @@ match with an element of the completions."
               :super (and (intersection mods (modifiers-super *modifiers*)) t)
               :altgr altgr-p)))
 
-
 ;;; input string utility functions
-
 (defun input-submit (input key)
   (declare (ignore input key))
   :done)
@@ -641,9 +634,7 @@ functions are passed this structure as their first argument."
   "Return a the substring in INPUT bounded by START and END."
   (subseq (input-line-string input) start end))
 
-
 ;;; "interactive" input functions
-
 (defun input-find-completions (str completions)
   (let ((candidates (if (or (functionp completions)
                             (and (symbolp completions)
@@ -847,9 +838,7 @@ to 'dead_acute', 'dead_' is trimmed from the dead keysyms name, and 'a' and
                               :string (screen-input-window (current-screen))
                               :stumpwm-selection)))
 
-
 ;;; Misc functions
-
 (defun process-input (screen prompt input code state)
   "Process the key (code and state), given the current input
 buffer. Returns a new modified input buffer."

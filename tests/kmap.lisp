@@ -1,5 +1,5 @@
 (in-package #:stumpwm/tests)
-
+(in-suite :stumpwm)
 (defun expand-key-description (&rest desc)
   (let ((args (list (car desc) :keysym)))
     (dolist (mod (cdr desc))

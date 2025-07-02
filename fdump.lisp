@@ -144,9 +144,7 @@ Otherwise, defaults to writing to \"FILE.dump\" in the XDG_DATA_HOME location."
 
 (defcommand-alias dump-desktop dump-desktop-to-file)
 
-
 ;;;
-
 (defun read-dump-from-file (file)
   (with-open-file (fp file :direction :input)
     (with-standard-io-syntax

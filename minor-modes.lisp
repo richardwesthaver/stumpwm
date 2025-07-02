@@ -27,7 +27,6 @@
 ;; the MOP is used to implement minor modes and add them to scope objects.
 
 ;;; Code:
-
 (in-package :stumpwm)
 
 (export '(minor-mode
@@ -73,9 +72,7 @@
 "A dynamic variable bound to the minor mode object when executing a minor mode
 command.")
 
-
 ;;; General Hooks
-
 (defvar *minor-mode-enable-hook* ()
   "A hook run whenever a minor mode is enabled. Functions are called with the
 minor mode symbol and the object they have been added to. This is run when a
@@ -88,9 +85,7 @@ explicitly disabled via disable-minor-mode. This is run AFTER the minor mode has
 been disabled, and is called with the minor mode and the first object it was
 disabled in.")
 
-
 ;;; Classes and Global Modes
-
 (defclass unscoped-modes () ())
 
 (defclass minor-mode () ()
@@ -104,9 +99,7 @@ object.")
 (defvar *active-global-minor-modes* ()
   "A list of all currently active global minor modes.")
 
-
 ;;; Sync Keys
-
 (defun minor-mode-sync-keys-hook-function (&rest rest)
   (declare (ignore rest))
   (sync-keys))
@@ -115,9 +108,7 @@ object.")
 (add-hook *focus-window-hook* 'minor-mode-sync-keys-hook-function)
 (add-hook *focus-group-hook* 'minor-mode-sync-keys-hook-function)
 
-
 ;;; Conditions
-
 (define-condition minor-mode-error (error) ())
 
 (define-condition minor-mode-hook-error (minor-mode-error)
@@ -160,9 +151,7 @@ object.")
 
 (define-condition minor-mode-disable-error (minor-mode-autodisable-error) ())
 
-
 ;;; Minor Mode Protocol
-
 (defgeneric minor-mode-global-p (minor-mode-symbol)
   (:documentation "Return T when MINOR-MODE-SYMBOL denotes a global minor mode")
   (:method (mode) (declare (ignore mode)) nil))
@@ -339,9 +328,7 @@ current objects if MINOR-MODE is global"
           (run-hook-with-args *minor-mode-enable-hook* minor-mode run-hook)))))
   (minor-mode-sync-keys-hook-function))
 
-
 ;;; Find Minor Modes
-
 (defun sync-minor-modes (object)
   "Sync the globally active minor modes in the object"
   (loop for class in *active-global-minor-modes*
@@ -439,9 +426,7 @@ modes."
                 (tile-group-current-frame group)))
           (ct (group-current-window group))))))
 
-
 ;;; Activep and Top Maps
-
 (defun minor-mode-command-active-p (group command)
   (find-minor-mode (command-class command) (group-screen group)))
 
@@ -454,7 +439,6 @@ modes."
                  (list-current-mode-objects :screen (group-screen group)))))
 
 ;;; Lighter on click
-
 (flet ((ml-on-click-minor-mode (code minor-mode &rest rest)
          (declare (ignore rest))
          (let ((fn (lighter-on-click minor-mode)))
@@ -581,7 +565,6 @@ ROOT-MAP-SPEC."
     (fill-keymap top-map *escape-key* root-map)
     (generate-keymap top-map-spec top-map)))
 
-
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (defun make-special-variable-name (mode name)
     (intern (format nil "*~A-~A*" mode name)))
@@ -608,7 +591,7 @@ ROOT-MAP-SPEC."
           (other-opts '()))
       (flet ((collect-values (option)
                (destructuring-bind (optname . option-arguments) option
-                 (alexandria:if-let (argcount (cdr (assoc optname valid-options)))
+                 (if-let ((argcount (cdr (assoc optname valid-options))))
                    (progn (if (and (numberp argcount)
                                    (= argcount 1))
                               (push (car option-arguments) all-vals)
@@ -738,9 +721,7 @@ scope object."
         (declare (ignore mode))
         (setf ,(make-special-variable-name mode 'destroy-hook) new)))))
 
-
 ;;; Minor Mode Scopes
-
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (defvar *minor-mode-scopes* (make-hash-table)
     "Store the scope supertypes and object retrieval functions for a scope")
@@ -833,7 +814,6 @@ where the car is the scope designator and the cdr is the class with that scope."
                     class))))
     (mapc #'validate superclasses)))
 
-
 (defmacro define-minor-mode-scope
     ((designator class &optional filter-type) &body retrieve-current-object)
   "Define a minor mode scope for use with DEFINE-MINOR-MODE.  This generates a
@@ -908,7 +888,6 @@ provided."
 (define-minor-mode-scope (:float-window float-window)
   (current-window))
 
-
 (defmacro define-minor-mode (mode superclasses slots &rest options)
   "Define a minor mode as a class to be instantiated when the minor mode is
 activated. Minor modes are dynamically mixed in to and out of the appropriate

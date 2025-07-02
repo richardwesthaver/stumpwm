@@ -1,5 +1,4 @@
 ;;;; cpu.lisp
-
 (in-package #:swm/cpu)
 
 ;;; "cpu" goes here. Hacks and glory await!
@@ -10,7 +9,6 @@
 ;;;           2021 Benjamin Slade. 
 ;;;
 ;;; Maintainer: Julian Stecklina
-;;;
 
 ;; Install formatters.
 (add-screen-mode-line-formatter #\C 'cpu-modeline)
@@ -31,7 +29,6 @@
 (defvar *cpu-temp-med* 65)
 (defvar *cpu-temp-hi* 75)
 (defvar *cpu-temp-crit* 90)
-
 
 (defvar *cpu-usage-modeline-fmt* "CPU: ^[~A~3D%^] "
   "The default formatting for CPU usage")
@@ -131,14 +128,14 @@ utilization."
 	"")))
 
 (defvar *acpi-thermal-zone*
-  (let ((proc-dir (list-directory #P"/proc/acpi/thermal_zone/"))
+  (let ((proc-dir (directory-files #P"/proc/acpi/thermal_zone/"))
         (sys-dir (sort
                   (remove-if-not
                    (lambda (x)
                      (when (and (cl-ppcre:scan "^.*/thermal_zone\\d+/" (namestring x))
                                 (string-equal (read-file (format nil "~A/type" x)) (format nil "x86_pkg_temp~%")))
                        x))
-                   (list-directory #P"/sys/class/thermal/"))
+                   (directory-files #P"/sys/class/thermal/"))
                   #'string< :key #'namestring)))
     (cond
       (proc-dir

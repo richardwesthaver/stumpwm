@@ -35,17 +35,22 @@
           add-to-load-path))
 
 (defvar *module-dir*
-  (pathname-as-directory (concat (getenv "HOME") "/.stumpwm.d/modules"))
+  (directory-path (concat (sb-posix:getenv "HOME") "/.stumpwm.d/modules"))
   "The location of the contrib modules on your system.")
 
 (defun build-load-path (path)
   "Maps subdirectories of path, returning a list of all subdirs in the
   path which contain any files ending in .asd"
-  (map 'list #'directory-namestring
-       (remove-if-not (lambda (file)
-                        (equal "asd"
-                               (nth-value 1 (uiop:split-name-type (file-namestring file)))))
-                      (list-directory-recursive path t))))
+  (let ((ret))
+    (walk-directory path (constantly t) (constantly t)
+                    (lambda (d) 
+                      (mapc (lambda (f) 
+                              (when (equal "asd" (pathname-type f))
+                                (push
+                                 (directory-namestring f)
+                                 ret)))
+                            (directory-files d))))
+    (nreverse ret)))
 
 (defvar *load-path* nil
   "A list of paths in which modules can be found, by default it is
@@ -61,7 +66,7 @@
   "Returns the first file ending with asd in `PATH', nil else."
   (first (remove-if-not (lambda (file)
                           (uiop:string-suffix-p (file-namestring file) ".asd"))
-                        (list-directory path))))
+                        (directory-files path))))
 
 (defun list-modules ()
   "Return a list of the available modules."

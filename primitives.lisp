@@ -16,13 +16,12 @@
 ;; along with this software; see the file COPYING.  If not, see
 ;; <http://www.gnu.org/licenses/>.
 
-;; Commentary:
-;;
+;;; Commentary:
+
 ;; This file contains primitive data structures and functions used
 ;; throughout stumpwm.
-;;
-;; Code:
 
+;;; Code:
 (in-package :stumpwm)
 
 (export '(*suppress-abort-messages*
@@ -147,25 +146,21 @@
           with-data-file
           move-to-head
           format-expand
-
           ;; Frame accessors
           frame-x
           frame-y
           frame-width
           frame-height
-
           ;; Screen accessors
           screen-heads
           screen-root
           screen-focus
           screen-float-focus-color
           screen-float-unfocus-color
-
           ;; Window states
           +withdrawn-state+
           +normal-state+
           +iconic-state+
-
           ;; Modifiers
           modifiers
           modifiers-p
@@ -179,14 +174,11 @@
           stumpwm-condition
           stumpwm-error
           stumpwm-warning
-
           ;; Completion Options
           *maximum-completions*
-
           ;; Minor mode keymaps
           *minor-mode-maps*))
 
-
 ;;; Completions
 (defvar *maximum-completions* 100
   "Maximum number of completions to show in interactive prompts. Setting
@@ -225,7 +217,6 @@ appear for. This must be an integer. If falsy, default to *timeout-wait*.")
   "Keep track of the timer that hides the message window.")
 
 ;;; Grabbed pointer
-
 (defvar *grab-pointer-count* 0
   "The number of times the pointer has been grabbed.")
 
@@ -375,8 +366,8 @@ with 1 argument: the menu.")
 (defvar *new-head-hook* '()
   "A hook called whenever a head is added. It is called with 2 arguments: the
  new head and the current screen.")
-;; Data types and globals used by stumpwm
 
+;; Data types and globals used by stumpwm
 (defvar *display* nil
   "The display for the X server")
 
@@ -973,9 +964,7 @@ string which is split to obtain the individual regexps. "
          (post (subseq list nth)))
     (nconc pre (list item) post)))
 
-;;; 
 ;;; formatting routines
-
 (declaim (ftype (function (vector list list &key (:element-type (or cons symbol))) vector) replace-ranges))
 (defun replace-ranges (vec ranges replacements &key (element-type (array-element-type vec)))
   "Return a new vector with all (`START' `END') pairs in @var{`RANGES'} replaced with the corresponding vector in
@@ -1312,7 +1301,7 @@ window, and returns the preferred frame or a list of the above preferences.")
 (defun backtrace-string ()
   "Similar to print-backtrace, but return the backtrace as a string."
   (with-output-to-string (*standard-output*)
-    (print-backtrace)))
+    (backtrace 100 *standard-output*)))
 
 (defvar *startup-message* "^2*Welcome to The ^BStump^b ^BW^bindow ^BM^banager!
 Press ^5*~a ?^2* for help."

@@ -22,7 +22,6 @@
                (:file "debug")
                (:file "primitives")
                (:file "wrappers")
-               (:file "pathnames")
                (:file "font-rendering")
                (:file "keysyms")
                (:file "keytrans")
@@ -84,7 +83,6 @@
   :pathname "tests/"
   :components ((:file "package")
                (:file "kmap")
-               (:file "pathnames")
                (:file "mode-line-formatters"))
   :perform (test-op (o c)
              (uiop/package:symbol-call "RT" "DO-TESTS" :stumpwm)))

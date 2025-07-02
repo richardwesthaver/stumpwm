@@ -287,9 +287,7 @@ sequences that run binding."
                 append (search-it cmd (binding-command i) (cons (binding-key i) key-seq)))))
     (mapcar 'reverse (search-it command keymap nil))))
 
-
 ;;; The Top Map
-
 (defvar *top-map-list* nil)
 
 (defun push-top-map (new-top)

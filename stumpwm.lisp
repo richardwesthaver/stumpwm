@@ -31,9 +31,8 @@
 
 (defvar *in-main-thread* nil
   "Dynamically bound to T during the execution of the main stumpwm function.")
-
-;;; Main
 
+;;; Main
 (defun load-rc-file (&optional (catch-errors t))
   "Load the user's .stumpwmrc file or the system wide one if that
 doesn't exist. Returns a values list: whether the file loaded (t if no
@@ -68,22 +67,20 @@ further up. "
     ((eq error-key 'xlib:access-error)
      (write-line "Another window manager is running.")
      (throw :top-level :quit))
-     ;; all other asynchronous errors are printed.
-     (asynchronous
-      (message "Caught Asynchronous X Error: ~s ~s." error-key key-vals))
-     (t
-      (apply 'error error-key :display display :error-key error-key key-vals))))
+    ;; all other asynchronous errors are printed.
+    (asynchronous
+     (message "Caught Asynchronous X Error: ~s ~s." error-key key-vals))
+    (t
+     (apply 'error error-key :display display :error-key error-key key-vals))))
 
 
 (defgeneric handle-top-level-condition (c))
 
-(defmethod handle-top-level-condition (c)
-  ;; Do nothing by default; there's nothing wrong with signalling
-  ;; arbitrary conditions
-  )
+;; Do nothing by default; there's nothing wrong with signalling arbitrary
+;; conditions
+(defmethod handle-top-level-condition (c))
 
-(defmethod handle-top-level-condition ((c warning))
-  (muffle-warning))
+(defmethod handle-top-level-condition ((c warning)) (muffle-warning))
 
 (defmethod handle-top-level-condition ((c serious-condition))
   (ecase *top-level-error-action*
@@ -95,11 +92,10 @@ further up. "
     (:break (restart-case
                 (invoke-debugger c)
               (:abort-debugging ()
-                :report (lambda (stream) (format stream "abort debugging"))
+               :report (lambda (stream) (format stream "abort debugging"))
                 (throw :top-level (list c (backtrace-string))))))
     (:abort
      (throw :top-level (list c (backtrace-string))))))
-
 
 (defclass request-channel ()
   ((in    :initarg :in
@@ -159,7 +155,7 @@ further up. "
 
 (defmethod io-channel-ioport (io-loop (channel display-channel))
   (sb-sys:fd-stream-fd
-    (xlib::display-input-stream (slot-value channel 'display))))
+   (xlib::display-input-stream (slot-value channel 'display))))
 
 (defmethod io-channel-events ((channel display-channel))
   (list :read :loop))
@@ -167,15 +163,15 @@ further up. "
 (flet ((dispatch-all (display)
          (block handle
            (loop
-              (xlib:display-finish-output display)
-              (let ((nevents (xlib:event-listen display 0)))
-                (unless nevents (return-from handle))
-                (xlib:with-event-queue (display)
-                  (run-hook *event-processing-hook*)
-                  ;; Note: process-event appears to hang for an unknown
-                  ;; reason. This is why it is passed a timeout in hopes that
-                  ;; this will keep it from hanging.
-                  (xlib:process-event display :handler #'handle-event :timeout 0)))))))
+             (xlib:display-finish-output display)
+             (let ((nevents (xlib:event-listen display 0)))
+               (unless nevents (return-from handle))
+               (xlib:with-event-queue (display)
+                 (run-hook *event-processing-hook*)
+                 ;; Note: process-event appears to hang for an unknown
+                 ;; reason. This is why it is passed a timeout in hopes that
+                 ;; this will keep it from hanging.
+                 (xlib:process-event display :handler #'handle-event :timeout 0)))))))
   (defmethod io-channel-handle ((channel display-channel) (event (eql :read)) &key)
     (dispatch-all (slot-value channel 'display)))
   (defmethod io-channel-handle ((channel display-channel) (event (eql :loop)) &key)
@@ -183,37 +179,35 @@ further up. "
 
 (defun stumpwm-internal-loop ()
   (loop
-     (with-simple-restart (:new-io-loop "Recreate I/O loop")
-       (let ((io (make-instance *default-io-loop*)))
-         (io-loop-add io (make-instance 'stumpwm-timer-channel))
-         (io-loop-add io (make-instance 'display-channel :display *display*))
-
-         ;; If we have no implementation for the current CL, then
-         ;; don't register the channel.
-         (multiple-value-bind (in out)
-             (open-pipe)
-           (let ((channel (make-instance 'request-channel :in in :out out)))
-             (io-loop-add io channel)
-             (setq *request-channel* channel)))
-
-         (setf *toplevel-io* io)
-         (loop
-            (handler-bind
-                ((t (lambda (c)
-                      (handle-top-level-condition c))))
-              (io-loop io :description "StumpWM")))))))
+    (with-simple-restart (:new-io-loop "Recreate I/O loop")
+      (let ((io (make-instance *default-io-loop*)))
+        (io-loop-add io (make-instance 'stumpwm-timer-channel))
+        (io-loop-add io (make-instance 'display-channel :display *display*))
+        ;; If we have no implementation for the current CL, then
+        ;; don't register the channel.
+        (multiple-value-bind (in out)
+            (open-pipe)
+          (let ((channel (make-instance 'request-channel :in in :out out)))
+            (io-loop-add io channel)
+            (setq *request-channel* channel)))
+        (setf *toplevel-io* io)
+        (loop
+          (handler-bind
+              ((t (lambda (c)
+                    (handle-top-level-condition c))))
+            (io-loop io :description "StumpWM")))))))
 
 (defun parse-display-string (display)
   "Parse an X11 DISPLAY string and return the host and display from it."
   (ppcre:register-groups-bind (protocol host ('parse-integer display screen))
-                              ("^(?:(.*?)/)?(.*?)?:(\\d+)(?:\\.(\\d+))?" display :sharedp t)
+      ("^(?:(.*?)/)?(.*?)?:(\\d+)(?:\\.(\\d+))?" display :sharedp t)
     (values
      ;; clx doesn't like (vector character *)
      (coerce (or host "")
              '(simple-array character (*)))
      display screen
      (cond (protocol
-             (intern1 protocol :keyword))
+            (intern1 protocol :keyword))
            ((or (string= host "")
                 (string-equal host "unix"))
             :local)
@@ -235,14 +229,12 @@ further up. "
              (let ((*initializing* t))
                (ensure-data-dir)
                (open-log)
-               
-               ;; we need to do this first because init-screen grabs
-               ;; keys
+               ;; we need to do this first because init-screen grabs keys
                (update-modifier-map)
                ;; Initialize all the screens
                (setf *screen-list* (loop for i in (xlib:display-roots *display*)
-                                      for n from 0
-                                      collect (init-screen i n host)))
+                                         for n from 0
+                                         collect (init-screen i n host)))
                (xlib:display-finish-output *display*)
                ;; Enable minor mode keymap lookup. This needs to be done after
                ;; screens are initialized.
@@ -255,7 +247,7 @@ further up. "
                        (message "^B^1*Error loading ^b~A^B: ^n~A." rc err))))
                (when *last-unhandled-error*
                  (message-no-timeout "^B^1*StumpWM Crashed With An Unhandled Error!~%Copy the error to the clipboard with the 'copy-unhandled-error' command.~%^b~a^B^n~%~%~a."
-                          (first *last-unhandled-error*) (second *last-unhandled-error*)))
+                                     (first *last-unhandled-error*) (second *last-unhandled-error*)))
                (mapc 'process-existing-windows *screen-list*)
                ;; We need to setup each screen with its current window. Go
                ;; through them in reverse so the first screen's frame ends up
@@ -272,13 +264,10 @@ further up. "
                    (when (and netwm-id (< netwm-id (length (screen-groups s))))
                      (switch-to-group (elt (sort-groups s) netwm-id))))
                  (redraw-current-message (current-screen))))
-
              (run-hook *pre-thread-hook*)
-
              ;; Start hashing the user's PATH so completion is quick
              ;; the first time they try to run a command.
              (sb-thread:make-thread #'rehash)
-
              ;; Let's manage.
              (let ((*package* (find-package *default-package*)))
                (run-hook *start-hook*)
@@ -292,20 +281,8 @@ further up. "
     (xlib:close-display *display*))
   (apply 'execv (first sb-ext:*posix-argv*) sb-ext:*posix-argv*))
 
-;; based on cffi version of set-signal-handler from Andrew Lyon at https://stackoverflow.com/a/10442062
-;; rewritten to use SBCL's Foreign Function Interface directly by Max-Gerd Retzlaff
-(defmacro set-signal-handler (signo &body body)
-  `(sb-alien:alien-funcall
-    (sb-alien:extern-alien "signal" (function sb-alien:void
-                                              sb-alien:int sb-alien:system-area-pointer))
-    ,signo
-    ;; callback function
-    (sb-alien:alien-sap
-     (sb-alien::alien-lambda sb-alien:void ((signum sb-alien:int))
-       ,@body))))
-
 ;; Usage: (stumpwm)
-(defun stumpwm (&optional (display-str (or (getenv "DISPLAY") ":0")))
+(defun stumpwm (&optional (display-str (or (sb-posix:getenv "DISPLAY") ":0")))
   "Start the stump window manager."
   (set-signal-handler sb-posix:sighup
     (dformat 0 "SIGHUP received: forcing immediate restart of stumpwm~%") ;; debug level 0 to "force" logging

@@ -2,7 +2,7 @@
 
 (in-package #:swm/command-history)
 
-(defvar *home-dir* (getenv "HOME"))
+(defvar *home-dir* (sb-posix:getenv "HOME"))
 
 (defvar *command-history-file*
   (merge-pathnames

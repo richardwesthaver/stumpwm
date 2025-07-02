@@ -81,9 +81,7 @@
     (t
      (xlib-fake-click (screen-root (window-screen win)) (window-xwin win) button))))
 
-
 ;;; Pointer helper functions
-
 (defun grab-pointer (screen)
   "Grab the pointer and set the pointer shape."
   (incf *grab-pointer-count*)

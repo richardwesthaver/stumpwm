@@ -25,7 +25,6 @@
 (in-package :stumpwm)
 
 (export '(defprogram-shortcut
-          pathname-is-executable-p
           programs-in-path
           restarts-menu
           run-or-raise
@@ -38,25 +37,26 @@
 one. Error is the error being recovered from. If the user aborts the
 menu, the error is re-signalled."
   (let* ((*hooks-enabled-p* nil) ;;disable hooks to avoid deadlocks involving errors in *message-hook*
-         (restart (select-from-menu (current-screen)
-                                   (mapcar (lambda (r)
-                                             (list (format nil "[~a] ~a"
-                                                           (restart-name r)
-                                                           (substitute #\Space
-                                                                       #\Newline
-                                                                       (write-to-string r :escape nil)))
-                                                   r))
-                                           ;; a crusty way to get only
-                                           ;; the restarts from
-                                           ;; stumpwm's top-level
-                                           ;; restart inward.
-                                           (reverse (member 'top-level
-                                                            (reverse (compute-restarts))
-                                                            :key 'restart-name)))
-                                   (format nil "Error: ~a"
+         (restart (select-from-menu 
+                   (current-screen)
+                   (mapcar (lambda (r)
+                             (list (format nil "[~a] ~a"
+                                           (restart-name r)
                                            (substitute #\Space
                                                        #\Newline
-                                                       (write-to-string err :escape nil))))))
+                                                       (write-to-string r :escape nil)))
+                                   r))
+                           ;; a crusty way to get only
+                           ;; the restarts from
+                           ;; stumpwm's top-level
+                           ;; restart inward.
+                           (reverse (member 'top-level
+                                            (reverse (compute-restarts))
+                                            :key 'restart-name)))
+                   (format nil "Error: ~a"
+                           (substitute #\Space
+                                       #\Newline
+                                       (write-to-string err :escape nil))))))
     (when restart
       (invoke-restart (second restart)))))
 
@@ -106,22 +106,22 @@ your X server and CLX implementation support XTEST."
   (when (current-window)
     (send-fake-click (current-window) button)))
 
-(defun programs-in-path (&optional full-path (path (split-string (getenv "PATH") ":")))
+(defun programs-in-path (&optional full-path (path (split-string (sb-posix:getenv "PATH") ":")))
   "Return a list of programs in the path. If @var{full-path} is
 @var{t} then return the full path, otherwise just return the
 filename. @var{path} is by default the @env{PATH} evironment variable
 but can be specified. It should be a string containing each directory
 seperated by a colon."
   (loop for p in path
-         for dir = (probe-path p)
-         when dir
-           nconc (loop for file in (directory (merge-pathnames (make-pathname :name :wild :type :wild) dir)
-                                              :resolve-symlinks nil)
-                       for namestring = (file-namestring file)
-                       when (pathname-is-executable-p file)
-                         collect (if full-path
-                                     (namestring file)
-                                     namestring))))
+        for dir = (probe-directory p)
+        when dir
+        nconc (loop for file in (directory (merge-pathnames (make-pathname :name :wild :type :wild) dir)
+                                           :resolve-symlinks nil)
+                    for namestring = (file-namestring file)
+                    when (pathname-executable-p file)
+                    collect (if full-path
+                                (namestring file)
+                                namestring))))
 
 (defstruct path-cache
   programs modification-dates paths)
@@ -132,10 +132,10 @@ seperated by a colon."
 (defvar *path-cache* nil
   "A cache containing the programs in the path, used for completion.")
 
-(defun rehash (&optional (paths (mapcar 'parse-namestring (split-string (getenv "PATH") ":"))))
+(defun rehash (&optional (paths (mapcar 'parse-namestring (split-string (sb-posix:getenv "PATH") ":"))))
   "Update the cache of programs in the path stored in @var{*programs-list*} when needed."
   (let ((dates (mapcar (lambda (p)
-                         (when (probe-path p)
+                         (when (probe-file p)
                            (file-write-date p)))
                        paths)))
     (finish-output)
@@ -174,8 +174,8 @@ such a case, kill the shell command to resume StumpWM."
   (handler-case
       (if cmd
           (message "^20~{~a~^~%~}"
-               (mapcar 'prin1-to-string
-                       (multiple-value-list (eval (read-from-string cmd)))))
+                   (mapcar 'prin1-to-string
+                           (multiple-value-list (eval (read-from-string cmd)))))
           (throw 'error :abort))
     (error (c)
       (err "^B^1*~A" c))))
@@ -194,11 +194,11 @@ such a case, kill the shell command to resume StumpWM."
     (send-fake-key (screen-current-window screen) key)))
 
 (defcommand meta (key) ((:key "Key: "))
-"Send a fake key to the current window. @var{key} is a typical StumpWM key, like @kbd{C-M-o}."
+  "Send a fake key to the current window. @var{key} is a typical StumpWM key, like @kbd{C-M-o}."
   (send-meta-key (current-screen) key))
 
 (defcommand loadrc () ()
-"Reload the @file{~/.stumpwmrc} file."
+  "Reload the @file{~/.stumpwmrc} file."
   (handler-case 
       (with-restarts-menu (load-rc-file nil))
     (error (c)
@@ -212,22 +212,22 @@ such a case, kill the shell command to resume StumpWM."
   (let ((in-command-mode (eq *top-map* *root-map*)))
     (when (pop-top-map)
       (if in-command-mode
-        (run-hook *command-mode-end-hook*)
-        (message "Exited.")))))
+          (run-hook *command-mode-end-hook*)
+          (message "Exited.")))))
 
 (defcommand-alias abort keyboard-quit)
 
 (defcommand quit-confirm () ()
   "Prompt the user to confirm quitting StumpWM."
   (if (y-or-n-p (format nil "~@{~a~^~%~}"
-                          "You are about to quit the window manager to TTY."
-                          "Really ^1^Bquit^b^n ^B^2StumpWM^n^b?"
-                          "^B^6Confirm?^n "))
+                        "You are about to quit the window manager to TTY."
+                        "Really ^1^Bquit^b^n ^B^2StumpWM^n^b?"
+                        "^B^6Confirm?^n "))
       (quit)
       (xlib:unmap-window (screen-message-window (current-screen)))))
 
 (defcommand quit () ()
-"Quit StumpWM."
+  "Quit StumpWM."
   (throw :top-level :quit))
 
 (defcommand restart-soft () ()
@@ -266,7 +266,7 @@ number, with group being more significant (think radix sort)."
                  #'< :key (lambda (w) (group-number (window-group w))))))
 
 (defun run-or-raise (cmd props &optional (all-groups *run-or-raise-all-groups*)
-                                 (all-screens *run-or-raise-all-screens*))
+                                         (all-screens *run-or-raise-all-screens*))
   "Run the shell command, @var{cmd}, unless an existing window
 matches @var{props}. @var{props} is a property list with the following keys:
 
@@ -298,7 +298,7 @@ instance. @var{all-groups} overrides this default. Similarily for
         (run-shell-command cmd))))
 
 (defun run-or-pull (cmd props &optional (all-groups *run-or-raise-all-groups*)
-                    (all-screens *run-or-raise-all-screens*))
+                                        (all-screens *run-or-raise-all-screens*))
   "Similar to run-or-raise, but move the matching window to the
 current frame instead of switching to the window."
   (let* ((matches (find-matching-windows props all-groups all-screens))
@@ -314,10 +314,10 @@ current frame instead of switching to the window."
         (run-shell-command cmd))))
 
 (defcommand reload () ()
-"Reload StumpWM using @code{asdf}."
+  "Reload StumpWM using @code{asdf}."
   (message "Reloading StumpWM...")
   #+asdf (with-restarts-menu
-             (asdf:operate 'asdf:load-op :stumpwm))
+           (asdf:operate 'asdf:load-op :stumpwm))
   #-asdf (message "^B^1*Sorry, StumpWM can only be reloaded with asdf (for now).")
   #+asdf (message "Reloading StumpWM...^B^2*Done^n."))
 
@@ -380,24 +380,28 @@ like xprop."
                   (window-xwin (current-window))
                   (screen-root (current-screen)))))
      (loop for i in (xlib:list-properties win)
-        collect i
-        collect (multiple-value-bind (values type)
-                    (xlib:get-property win i)
-                  (case type
-                    (:wm_state (format nil "~{~a~^, ~}"
-                                       (loop for v in values
-                                          collect (case v (0 "Iconic") (1 "Normal") (2 "Withdrawn") (t "Unknown")))))
-                    (:window i)
-                    ;; _NET_WM_ICON is huuuuuge
-                    (:cardinal (if (> (length values) 20)
-                                   (format nil "~{~d~^, ~}..." (subseq values 0 15))
-                                   (format nil "~{~d~^, ~}" values)))
-                    (:atom (format nil "~{~a~^, ~}"
-                                   (mapcar (lambda (v) (xlib:atom-name *display* v)) values)))
-                    (:string (format nil "~{~s~^, ~}"
-                                     (mapcar (lambda (x) (map 'string 'xlib:card8->char x))
-                                             (split-seq values '(0)))))
-                    (:utf8_string (format nil "~{~s~^, ~}"
-                                          (mapcar 'utf8-to-string
-                                                  (split-seq values '(0)))))
-                    (t values)))))))
+           collect i
+           collect (multiple-value-bind (values type)
+                       (xlib:get-property win i)
+                     (case type
+                       (:wm_state (format nil "~{~a~^, ~}"
+                                          (loop for v in values
+                                                collect (case v 
+                                                          (0 "Iconic") 
+                                                          (1 "Normal") 
+                                                          (2 "Withdrawn") 
+                                                          (t "Unknown")))))
+                       (:window i)
+                       ;; _NET_WM_ICON is huuuuuge
+                       (:cardinal (if (> (length values) 20)
+                                      (format nil "~{~d~^, ~}..." (subseq values 0 15))
+                                      (format nil "~{~d~^, ~}" values)))
+                       (:atom (format nil "~{~a~^, ~}"
+                                      (mapcar (lambda (v) (xlib:atom-name *display* v)) values)))
+                       (:string (format nil "~{~s~^, ~}"
+                                        (mapcar (lambda (x) (map 'string 'xlib:card8->char x))
+                                                (split-seq values '(0)))))
+                       (:utf8_string (format nil "~{~s~^, ~}"
+                                             (mapcar 'utf8-to-string
+                                                     (split-seq values '(0)))))
+                       (t values)))))))

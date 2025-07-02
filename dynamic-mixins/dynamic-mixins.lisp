@@ -87,4 +87,10 @@ instance; further elements must be class names or classes."
 (defmethod make-instance ((items mix-list) &rest initargs &key &allow-other-keys)
   (apply #'make-instance (ensure-mixin items) initargs))
 
+;;; Protocol
+(defgeneric replace-class (object new-class &rest initargs))
 
+(defgeneric replace-class-in-mixin (object new-class old-class &rest initargs)
+  (:method ((object standard-object) n o &rest rest)
+    (declare (ignore o))
+    (apply #'change-class object n rest)))

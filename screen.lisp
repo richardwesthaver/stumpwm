@@ -104,8 +104,6 @@ identity with a range check."
 (defun screen-font (screen)
   (first (screen-fonts screen)))
 
-
-
 (defun netwm-update-client-list-stacking (screen)
   (unless *initializing*
     (xlib:change-property (screen-root screen)

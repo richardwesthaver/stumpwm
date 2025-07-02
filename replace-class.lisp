@@ -1,10 +1,5 @@
 (in-package :dynamic-mixins-swm)
 
-(defgeneric replace-class-in-mixin (object new-class old-class &rest initargs)
-  (:method ((object standard-object) n o &rest rest)
-    (declare (ignore o))
-    (apply #'change-class object n rest)))
-
 (defmethod replace-class-in-mixin ((object mixin-object)
                                    (new-class class)
                                    (old-class class)
@@ -68,8 +63,6 @@
                        (mix-in-new-class ()
                          (ensure-mix object new-class))))))
              (apply #'change-class object new-class initargs)))))
-
-(defgeneric replace-class (object new-class &rest initargs))
 
 (defmethod replace-class :around (object new &rest rest)
   (restart-case (progn

@@ -30,7 +30,7 @@
   #.(concatenate
      'string
      (let* ((sys (asdf:find-system :stumpwm))
-            (git-dir (probe-path (asdf:system-relative-pathname sys ".git"))))
+            (git-dir (probe-directory (asdf:system-relative-pathname sys ".git"))))
        (if git-dir
            (string-trim '(#\Newline)
                         (run-shell-command

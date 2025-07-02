@@ -123,7 +123,7 @@
   (defmethod all-batteries ((method procfs-method))
     (mapcar (lambda (p)
               (make-instance 'procfs-battery :path p))
-            (list-directory "/proc/acpi/battery/")))
+            (std:directory-files "/proc/acpi/battery/")))
 
   (defmethod state-of ((battery procfs-battery))
     (handler-case
@@ -181,7 +181,7 @@
                             (make-instance 'sysfs-battery
                                            :path path))
                         (file-error () nil)))
-                    (list-directory "/sys/class/power_supply/"))))
+                    (std:directory-files "/sys/class/power_supply/"))))
 
   (defmethod state-of ((battery sysfs-battery))
     (handler-case

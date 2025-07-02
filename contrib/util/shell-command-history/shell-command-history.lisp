@@ -1,7 +1,7 @@
 ;;;; shell-command-history.lisp
 (in-package #:swm/shell-command-history)
 
-(defvar *home-dir* (getenv "HOME"))
+(defvar *home-dir* (sb-posix:getenv "HOME"))
 
 (defvar *shell-command-history-file*  (merge-pathnames (format nil
                                                                "~A/.stumpwm.d/shell-history"

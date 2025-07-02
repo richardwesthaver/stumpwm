@@ -1,2 +1,4 @@
 (defpackage #:stumpwm/tests
-  (:use #:stumpwm #:rt))
+  (:use #:cl #:stumpwm #:rt))
+(in-package :stumpwm/tests)
+(defsuite :stumpwm)
