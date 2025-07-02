@@ -1,7 +1,7 @@
 ;; Copyright (C) 2018 Ram Krishnan
-;;
+
 ;;  This file is part of stumpwm.
-;;
+
 ;; stumpwm is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2, or (at your option)
@@ -16,16 +16,13 @@
 ;; along with this software; see the file COPYING.  If not, see
 ;; <http://www.gnu.org/licenses/>.
 
-;; Commentary:
-;;
+;;; Commentary:
+
 ;; Provides a simple way to remap keybindings in applications running
 ;; under StumpWM
-;;
-;; Code:
 
+;;; Code:
 (in-package #:stumpwm)
-
-(export '(define-remapped-keys *remapped-keys-enabled-p*))
 
 (defvar *remap-keys-window-match-list* nil)
 

@@ -1,7 +1,7 @@
 ;; Copyright (C) 2006-2008 Shawn Betts
-;;
+
 ;;  This file is part of stumpwm.
-;;
+
 ;; stumpwm is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2, or (at your option)
@@ -15,17 +15,9 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this software; see the file COPYING.  If not, see
 ;; <http://www.gnu.org/licenses/>.
-
 (in-package :stumpwm)
 
-(export '(*hidden-window-color*
-          *mode-line-highlight-template*
-          bar
-          bar-zone-color
-          format-with-on-click-id))
-
 ;;; Settings
-
 (defvar *hidden-window-color* "^5*"
   "Color command for hidden windows when using the
 fmt-head-window-list-hidden-windows formatter. To disable coloring

@@ -1,7 +1,7 @@
 ;; Copyright (C) 2003-2008 Shawn Betts
-;;
+
 ;;  This file is part of stumpwm.
-;;
+
 ;; stumpwm is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2, or (at your option)
@@ -16,15 +16,12 @@
 ;; along with this software; see the file COPYING.  If not, see
 ;; <http://www.gnu.org/licenses/>.
 
-;; Commentary:
-;;
+;;; Commentary:
+
 ;; Frame functions
-;;
-;; Code:
 
+;;; Code:
 (in-package #:stumpwm)
-
-(export '(save-frame-excursion only-one-frame-p))
 
 (define-swm-class tile-group (group)
   ((frame-tree :accessor tile-group-frame-tree)

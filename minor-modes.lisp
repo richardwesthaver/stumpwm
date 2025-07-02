@@ -1,7 +1,7 @@
 ;;;; MINOR MODES
 
 ;; This file is part of stumpwm.
-;;
+
 ;; stumpwm is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2, or (at your option)
@@ -18,7 +18,6 @@
 ;; Boston, MA 02111-1307 USA
 
 ;;; Commentary:
-
 ;; This file implements minor modes for StumpWM. Minor modes are implemented as
 ;; mixins which get added to a scope object to allow overriding methods which
 ;; are called upon that object. Minor modes are defined with the macro
@@ -28,43 +27,6 @@
 
 ;;; Code:
 (in-package :stumpwm)
-
-(export '(minor-mode
-          define-minor-mode
-
-          add-minor-mode-scope
-          define-minor-mode-scope
-          define-descended-minor-mode-scope
-
-          sync-all-minor-modes
-
-          validate-superscope
-          validate-scope
-
-          *minor-mode*
-          *minor-mode-enable-hook*
-          *minor-mode-disable-hook*
-          *unscoped-minor-modes*
-
-          minor-mode-scope
-          minor-mode-global-p
-          enable-minor-mode
-          disable-minor-mode
-          autoenable-minor-mode
-          autodisable-minor-mode
-          minor-mode-keymap
-          minor-mode-lighter
-
-          list-modes
-          list-minor-modes
-          list-current-mode-objects
-          list-mode-objects
-          enabled-minor-modes
-          current-minor-modes
-          minor-mode-enabled-p
-          find-minor-mode
-
-          generate-keymap))
 
 (defvar *minor-mode*)
 

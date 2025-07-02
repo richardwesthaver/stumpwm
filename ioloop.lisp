@@ -1,73 +1,69 @@
-;;;; Copyright (C) 2016  Fredrik Tolf <fredrik@dolda2000.com>
-;;;;
-;;;;  This file is part of stumpwm.
-;;;;
-;;;; stumpwm is free software; you can redistribute it and/or modify
-;;;; it under the terms of the GNU General Public License as published by
-;;;; the Free Software Foundation; either version 2, or (at your option)
-;;;; any later version.
+;;; Copyright (C) 2016  Fredrik Tolf <fredrik@dolda2000.com>
 
-;;;; stumpwm is distributed in the hope that it will be useful,
-;;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;;;; GNU General Public License for more details.
+;;  This file is part of stumpwm.
 
-;;;; You should have received a copy of the GNU General Public License
-;;;; along with this software; see the file COPYING.  If not, see
-;;;; <http://www.gnu.org/licenses/>.
+;; stumpwm is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 2, or (at your option)
+;; any later version.
+
+;; stumpwm is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this software; see the file COPYING.  If not, see
+;; <http://www.gnu.org/licenses/>.
 
 (in-package :stumpwm)
 
-;;;; This file implements a generic multiplexing I/O loop for listening
-;;;; to I/O events from multiple sources. The model is as follows:
-;;;;
-;;;; An I/O multiplexer is represented as an object, with which I/O
-;;;; channels can be registered to be monitored for events when the I/O
-;;;; loop runs. An I/O channel is any object for which the generic
-;;;; functions IO-CHANNEL-IOPORT, IO-CHANNEL-EVENTS and
-;;;; IO-CHANNEL-HANDLE are implemented.
-;;;;
-;;;; IO-CHANNEL-IOPORT, given an I/O multiplexer and an I/O channel,
-;;;; should return the underlying system I/O facility that the channel
-;;;; operates on. The actual objects used to represent an I/O facility
-;;;; depends on the Lisp implementation, operating system and the
-;;;; specific I/O loop implementation, but, for example, on Unix
-;;;; implementations they will likely be numeric file descriptors. The
-;;;; I/O loop implementation implements IO-CHANNEL-IOPORT methods for
-;;;; the facilities it understands (such as FD-STREAMs on SBCL), so
-;;;; user-implemented channels should simply call IO-CHANNEL-IOPORT
-;;;; recursively on whatever it operates on.
-;;;;
-;;;; IO-CHANNEL-EVENTS, given an I/O channel, should return a list of
-;;;; the events that the channel is interested in. See the
-;;;; documentation for IO-CHANNEL-EVENTS for further details.
-;;;;
-;;;; The I/O loop guarantees that it will check what events a channel
-;;;; is interested in when it is first registered, and also at any time
-;;;; the channel has been notified of an event. If the channel changes
-;;;; its mind at any other point in time, it should use the
-;;;; IO-LOOP-UPDATE function to notify the I/O loop of such
-;;;; changes. The I/O loop may very well also update spuriously at
-;;;; other times, but such updates are not guaranteed.
-;;;;
-;;;; IO-CHANNEL-HANDLE is called by the I/O loop to notify a channel of
-;;;; an event.
-;;;;
-;;;; An I/O multiplexer is created with a MAKE-INSTANCE call on the
-;;;; class of the desired multiplexer implementation. If the code using
-;;;; the multiplexer has no certain preferences on an implementation
-;;;; (which should be the usual case), the variable *DEFAULT-IO-LOOP*
-;;;; points to a class that should be generally optimal given the
-;;;; current Lisp implementation and operating system.
-;;;;
-;;;; Given a multiplexer, channels can be registered with it using
-;;;; IO-LOOP-ADD, unregistered with IO-LOOP-REMOVE, and updated with
-;;;; IO-LOOP-UPDATE (as described above). Call IO-LOOP on the
-;;;; multiplexer to actually run it.
+;; This file implements a generic multiplexing I/O loop for listening
+;; to I/O events from multiple sources. The model is as follows:
 
-(export '(io-channel-ioport io-channel-events io-channel-handle
-          io-loop io-loop-add io-loop-remove io-loop-update
-          *default-io-loop* *current-io-loop*))
+;; An I/O multiplexer is represented as an object, with which I/O
+;; channels can be registered to be monitored for events when the I/O
+;; loop runs. An I/O channel is any object for which the generic
+;; functions IO-CHANNEL-IOPORT, IO-CHANNEL-EVENTS and
+;; IO-CHANNEL-HANDLE are implemented.
+
+;; IO-CHANNEL-IOPORT, given an I/O multiplexer and an I/O channel,
+;; should return the underlying system I/O facility that the channel
+;; operates on. The actual objects used to represent an I/O facility
+;; depends on the Lisp implementation, operating system and the
+;; specific I/O loop implementation, but, for example, on Unix
+;; implementations they will likely be numeric file descriptors. The
+;; I/O loop implementation implements IO-CHANNEL-IOPORT methods for
+;; the facilities it understands (such as FD-STREAMs on SBCL), so
+;; user-implemented channels should simply call IO-CHANNEL-IOPORT
+;; recursively on whatever it operates on.
+
+;; IO-CHANNEL-EVENTS, given an I/O channel, should return a list of
+;; the events that the channel is interested in. See the
+;; documentation for IO-CHANNEL-EVENTS for further details.
+
+;; The I/O loop guarantees that it will check what events a channel
+;; is interested in when it is first registered, and also at any time
+;; the channel has been notified of an event. If the channel changes
+;; its mind at any other point in time, it should use the
+;; IO-LOOP-UPDATE function to notify the I/O loop of such
+;; changes. The I/O loop may very well also update spuriously at
+;; other times, but such updates are not guaranteed.
+
+;; IO-CHANNEL-HANDLE is called by the I/O loop to notify a channel of
+;; an event.
+
+;; An I/O multiplexer is created with a MAKE-INSTANCE call on the
+;; class of the desired multiplexer implementation. If the code using
+;; the multiplexer has no certain preferences on an implementation
+;; (which should be the usual case), the variable *DEFAULT-IO-LOOP*
+;; points to a class that should be generally optimal given the
+;; current Lisp implementation and operating system.
+
+;; Given a multiplexer, channels can be registered with it using
+;; IO-LOOP-ADD, unregistered with IO-LOOP-REMOVE, and updated with
+;; IO-LOOP-UPDATE (as described above). Call IO-LOOP on the
+;; multiplexer to actually run it.
 
 ;;; General interface
 (defgeneric io-channel-ioport (io-loop channel)
@@ -157,14 +153,14 @@
   (declare (ignore channel event)))
 
 ;;; SBCL implementation
-;;;
-;;; It would be generally nice if SBCL supported epoll/kqueue, but it
-;;; doesn't. The general I/O loop interface is consistent with such
-;;; implementations, however, so if support is added at any time, it
-;;; could be supported fairly easily.
-;;;
-;;; If need should arise, it should also be quite simple to add
-;;; thread-safe operation.
+
+;; It would be generally nice if SBCL supported epoll/kqueue, but it
+;; doesn't. The general I/O loop interface is consistent with such
+;; implementations, however, so if support is added at any time, it
+;; could be supported fairly easily.
+
+;; If need should arise, it should also be quite simple to add
+;; thread-safe operation.
 (defclass sbcl-io-loop ()
   ((channels :initform '()))
   (:documentation
@@ -192,9 +188,9 @@
 (defmethod io-loop-update ((info sbcl-io-loop) channel)
   (declare (ignore info channel)))
 
-;;; Calculates the maximum blocking time that can be spend  waiting for
-;;; IO activity before channels interested in timeout events (i.e. timers)
-;;; need to be notified.
+;; Calculates the maximum blocking time that can be spend  waiting for
+;; IO activity before channels interested in timeout events (i.e. timers)
+;; need to be notified.
 (defun get-max-blocking-time (lowest-timeout)
   (declare (type (or null (integer 0)) lowest-timeout))
   (if lowest-timeout

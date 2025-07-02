@@ -65,10 +65,6 @@
 ;;; a problem handling files in sysfs caused by SBCL's slightly
 ;;; unusual handling of files in general and Linux' sysfs violating
 ;;; POSIX. When this situation is resolved, this function may be removed.
-#+linux
-(export '(read-line-from-sysfs))
-
-#+linux
 (defun read-line-from-sysfs (stream &optional (blocksize 80))
   "READ-LINE, but with a workaround for a known SBCL/Linux bug
 regarding files in sysfs. Data is read in chunks of BLOCKSIZE bytes."

@@ -1,7 +1,7 @@
 ;; Copyright (C) 2003-2008 Shawn Betts
-;;
+
 ;;  This file is part of stumpwm.
-;;
+
 ;; stumpwm is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2, or (at your option)
@@ -16,20 +16,12 @@
 ;; along with this software; see the file COPYING.  If not, see
 ;; <http://www.gnu.org/licenses/>.
 
-;; Commentary:
-;;
+;;; Commentary:
+
 ;; message printing functions
-;;
-;; Code:
 
+;;; Code:
 (in-package #:stumpwm)
-
-(export '(echo-string
-          swm-err
-          swm-message
-          gravity-coords
-          with-message-queuing
-          *queue-messages-p*))
 
 (defgeneric gravity-coords (gravity width height minx miny maxx maxy)
   (:documentation "Get the X and Y coordinates to place something of width WIDTH

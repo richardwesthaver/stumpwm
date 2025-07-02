@@ -24,27 +24,6 @@
 
 (in-package #:stumpwm)
 
-(export '(*default-bg-color*
-          current-screen
-          current-window
-          screen-current-window
-          screen-number
-          screen-groups
-          screen-windows
-          screen-height
-          screen-width
-          set-fg-color
-          set-bg-color
-          set-border-color
-          set-win-bg-color
-          set-focus-color
-          set-unfocus-color
-          set-float-focus-color
-          set-float-unfocus-color
-          set-msg-border-width
-          set-frame-outline-width
-          set-font))
-
 (defvar *default-bg-color* #x333333
   "Default color for the desktop background.")
 

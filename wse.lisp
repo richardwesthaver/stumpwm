@@ -1,9 +1,9 @@
 ;; Copyright 2011 Michael Raskin
-;;
+
 ;; Maintainer: Michael Raskin
-;;
+
 ;; This file is part of stumpwm.
-;;
+
 ;; stumpwm is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2, or (at your option)
@@ -20,10 +20,7 @@
 ;; Boston, MA 02111-1307 USA
 
 ;; Window Selection Expressions
-
 (in-package :stumpwm)
-
-(export '(move-windows-to-group act-on-matching-windows))
 
 (defun move-windows-to-group (windows &optional (arggroup nil))
   "Move all windows from the list to the group"

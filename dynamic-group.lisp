@@ -3,7 +3,7 @@
 ;;; Maintainer: szos at posteo dot net
 
 ;; This file is part of stumpwm.
-;;
+
 ;; stumpwm is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2, or (at your option)
@@ -57,20 +57,7 @@
 ;; that the window stack is not smaller than the minimum frame width/height.
 
 ;;; Code:
-
 (in-package :stumpwm)
-
-(export '(set-dynamic-group-initial-values
-          dynamic-group-p
-          dynamic-group-master-layout
-          dynamic-group-default-split-ratio
-          dynamic-group-head-layout
-          dynamic-group-head-split-ratio
-          dynamic-group-overflow-policy
-          dynamic-group-head-placement-policy
-          *rotation-focus-policy*
-          dyn-blacklist-command
-          dyn-unblacklist-command))
 
 (defmacro swap (a b)
   "Swap the values of A and B using PSETF."

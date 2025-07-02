@@ -1,7 +1,7 @@
 ;; Copyright (C) 2006-2008 Martin Bishop, Ivy Foster
-;;
+
 ;;  This file is part of stumpwm.
-;;
+
 ;; stumpwm is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2, or (at your option)
@@ -16,15 +16,12 @@
 ;; along with this software; see the file COPYING.  If not, see
 ;; <http://www.gnu.org/licenses/>.
 
-;; Commentary:
-;;
+;;; Commentary:
+
 ;; This file contains version information.
-;;
-;; Code:
 
+;;; Code:
 (in-package :stumpwm)
-
-(export '(stumpwm-version *stumpwm-version*))
 
 (defparameter *stumpwm-version*
   #.(concatenate
@@ -43,5 +40,3 @@
 (defcommand stumpwm-version () ()
 "Print version information and compilation date."
   (swm-message *stumpwm-version*))
-
-;; End of file

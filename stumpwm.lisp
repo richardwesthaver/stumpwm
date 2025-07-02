@@ -1,7 +1,7 @@
 ;; Copyright (C) 2003-2008 Shawn Betts
-;;
+
 ;;  This file is part of stumpwm.
-;;
+
 ;; stumpwm is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2, or (at your option)
@@ -17,17 +17,9 @@
 ;; <http://www.gnu.org/licenses/>.
 
 ;; Commentary:
-;;
+
 ;; Code:
-
 (in-package :stumpwm)
-
-(export '(*toplevel-io*
-          stumpwm
-          call-in-main-thread
-          in-main-thread-p
-          push-event
-          close-resources))
 
 (defvar *in-main-thread* nil
   "Dynamically bound to T during the execution of the main stumpwm function.")

@@ -1,7 +1,7 @@
 ;; Copyright (C) 2003-2008 Shawn Betts
-;;
+
 ;;  This file is part of stumpwm.
-;;
+
 ;; stumpwm is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2, or (at your option)
@@ -16,24 +16,12 @@
 ;; along with this software; see the file COPYING.  If not, see
 ;; <http://www.gnu.org/licenses/>.
 
-;; Commentary:
-;;
+;;; Commentary:
+
 ;; This file handles keymaps
-;;
-;; Code:
 
+;;; Code:
 (in-package stumpwm)
-
-(export '(*top-map*
-          *root-map*
-          *key-seq-color*
-          *altgr-offset*
-          define-key
-          kbd
-          lookup-command
-          lookup-key
-          make-sparse-keymap
-          undefine-key))
 
 (defvar *top-map* nil
   "The top level key map. This is where you'll find the binding for the

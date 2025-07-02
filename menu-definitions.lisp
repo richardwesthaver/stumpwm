@@ -1,7 +1,7 @@
 ;; Copyright (C) 2018 Stuart Dilts
-;;
+
 ;;  This file is part of stumpwm.
-;;
+
 ;; stumpwm is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2, or (at your option)
@@ -16,21 +16,15 @@
 ;; along with this software; see the file COPYING.  If not, see
 ;; <http://www.gnu.org/licenses/>.
 
-;; Commentary:
-;;
+;;; Commentary:
+
 ;; Implementation of an interactive menu. This file contains the definitions of the menu
 ;; class as defined in menu-declarations.lisp.
-;;
-;; Code:
+
+;;; Code:
 
 ;;; interactive menu
-
 (in-package #:stumpwm)
-
-(export '(entries-from-nested-list
-          select-from-menu
-          select-from-batch-menu
-          command-menu))
 
 (defun entries-from-nested-list (lst)
   (mapcar (lambda (x)

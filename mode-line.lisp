@@ -1,8 +1,8 @@
 ;; Copyright (C) 2006-2008 Shawn Betts
 ;; Copyright (C) 2016 Joram Schrijver
-;;
+
 ;;  This file is part of stumpwm.
-;;
+
 ;; stumpwm is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2, or (at your option)
@@ -16,26 +16,9 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this software; see the file COPYING.  If not, see
 ;; <http://www.gnu.org/licenses/>.
-
 (in-package :stumpwm)
 
-(export '(*mode-line-background-color*
-          *mode-line-border-color*
-          *mode-line-border-width*
-          *mode-line-foreground-color*
-          *mode-line-pad-x*
-          *mode-line-pad-y*
-          *mode-line-position*
-          *mode-line-timeout*
-          *screen-mode-line-format*
-          *screen-mode-line-formatters*
-          add-screen-mode-line-formatter
-          register-ml-on-click-id
-          enable-mode-line
-          toggle-mode-line))
-
 ;;; Settings
-
 (defvar *mode-line-position* :top
   "Specifies where the mode line is displayed. Valid values are :top and :bottom.")
 

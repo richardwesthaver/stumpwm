@@ -24,12 +24,6 @@
 
 (in-package #:stumpwm)
 
-(export '(*groups-map*
-          *group-top-maps*
-          *help-map*
-          *help-keys*
-          set-prefix-key))
-
 (defvar *escape-key* (kbd "C-t")
   "The escape key. Any keymap that wants to hang off the escape key
 should use this specific key struct instead of creating their own

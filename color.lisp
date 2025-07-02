@@ -1,8 +1,8 @@
 ;; Copyright (C) 2007-2008 Jonathan Moore Liles
 ;; Copyright (C) 2014 Joram Schrijver
-;;
+
 ;;  This file is part of stumpwm.
-;;
+
 ;; stumpwm is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2, or (at your option)
@@ -17,15 +17,15 @@
 ;; along with this software; see the file COPYING.  If not, see
 ;; <http://www.gnu.org/licenses/>.
 
-;; Commentary:
-;;
+;;; Commentary:
+
 ;; A change in color, or presentation in general, is started by a ^. If that
 ;; ^ is followed by a single number, that's taken as the index into the color
 ;; map to be set as the foreground color. If the ^ is followed by two numbers,
 ;; the first is taken as the index of the foreground color, and the second as
 ;; the index of the background color. Either of those can also be *, which
 ;; means the value should be set to default.
-;;
+
 ;; ^n resets the foreground and background color back to default.
 ;; ^A B turns bright colors on, and b turns them off.
 ;; ^R turns reverse colors on and r turns them off.
@@ -52,14 +52,7 @@
 ;;      used. In a string you'll probably only want to specify an integer.
 ;;    - :> takes no arguments. It triggers right-alignment for the rest of the
 ;;      line.
-
 (in-package :stumpwm)
-
-(export '(*colors*
-          update-color-map
-          adjust-color
-          update-screen-color-context
-          lookup-color))
 
 (defvar *colors*
   '("black"

@@ -1,7 +1,7 @@
-;; Copyright (C) 2003-2008 Ivy Foster
-;;
+;;; Copyright (C) 2003-2008 Ivy Foster
+
 ;;  This file is part of stumpwm.
-;;
+
 ;; stumpwm is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2, or (at your option)
@@ -16,32 +16,23 @@
 ;; along with this software; see the file COPYING.  If not, see
 ;; <http://www.gnu.org/licenses/>.
 
-;; Commentary:
-;;
+;;; Commentary:
+
 ;; This file contains code relating to the display of time.
-;;
+
 ;; When setting `*time-format-string-default*' to look like you want, the
 ;; options are exactly the same as those in the output of date --help (with date
 ;; 6.12), with the exception of a few unimplemented functions (see the comments
 ;; in *time-format-string-alist*, below). `*time-modeline-string*' is also
 ;; customizable; it defaults to the same value as *time-format-string-default*.
-;;
 
 ;; TODO:
-;;
+
 ;; - Implement all options from date.
 ;; - Simplify code (fewer helper functions somehow?)
 
-;; Code:
-
+;;; Code:
 (in-package :stumpwm)
-
-(export '(*time-format-string-default*
-          *time-modeline-string*
-          time-format
-          echo-date
-          time
-          refresh-time-zone))
 
 (defvar *time-format-string-default* "%a %b %e %Y %k:%M:%S"
   "The default value for `echo-date', (e.g, Thu Mar  3 2005 23:05:25).")

@@ -1,7 +1,7 @@
 ;; Copyright (C) 2003-2008 Shawn Betts
-;;
+
 ;;  This file is part of stumpwm.
-;;
+
 ;; stumpwm is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2, or (at your option)
@@ -16,33 +16,12 @@
 ;; along with this software; see the file COPYING.  If not, see
 ;; <http://www.gnu.org/licenses/>.
 
-;; Commentary:
-;;
-;; This file handles input stuff
-;;
-;; Code:
-(in-package :stumpwm)
+;;; Commentary:
 
-(export '(*input-history-ignore-duplicates*
-          *input-candidate-selected-hook*
-          *input-refine-candidates-fn*
-          *input-completion-style*
-          *input-map*
-          *numpad-map*
-          register-altgr-as-modifier
-          completing-read
-          input-delete-region
-          input-goto-char
-          input-insert-char
-          input-insert-string
-          input-point
-          input-refine-prefix
-          input-refine-fuzzy
-          input-refine-regexp
-          input-substring
-          input-validate-region
-          read-one-char
-          read-one-line))
+;; This file handles input stuff
+
+;;; Code:
+(in-package :stumpwm)
 
 ;;; General Utilities
 ;; This could use a much more efficient algorithm.

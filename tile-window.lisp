@@ -2,8 +2,6 @@
 
 (in-package :stumpwm)
 
-(export '(*ignore-wm-inc-hints*))
-
 (defvar *ignore-wm-inc-hints* nil
   "Set this to T if you never want windows to resize based on incremental WM_HINTs,
 like xterm and emacs.")

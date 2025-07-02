@@ -24,10 +24,6 @@
 
 (in-package #:stumpwm)
 
-(export '(get-x-selection
-          set-x-selection
-          *default-selections*))
-
 (defvar *default-selections* '(:primary)
   #.(format
      nil "~@{~A~%~}"

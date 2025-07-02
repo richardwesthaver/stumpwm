@@ -1,7 +1,7 @@
 ;; Copyright (C) 2007-2008 Shawn Betts
-;;
+
 ;;  This file is part of stumpwm.
-;;
+
 ;; stumpwm is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2, or (at your option)
@@ -16,12 +16,11 @@
 ;; along with this software; see the file COPYING.  If not, see
 ;; <http://www.gnu.org/licenses/>.
 
-;; Commentary:
-;;
-;; Generate the texinfo manual from docstrings in the source.
-;;
-;; Code:
+;;; Commentary:
 
+;; Generate the texinfo manual from docstrings in the source.
+
+;;; Code:
 (in-package #:stumpwm)
 
 (require :sb-introspect)

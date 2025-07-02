@@ -1,7 +1,7 @@
 ;; Copyright (C) 2003-2008 Shawn Betts
-;;
+
 ;;  This file is part of stumpwm.
-;;
+
 ;; stumpwm is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2, or (at your option)
@@ -16,18 +16,13 @@
 ;; along with this software; see the file COPYING.  If not, see
 ;; <http://www.gnu.org/licenses/>.
 
-;; Commentary:
-;;
-;;; A resize minor mode. Something a bit better should probably be
-;;; written. But it's an interesting way of doing it.
-;;
-;; Code:
+;;; Commentary:
 
+;; A resize minor mode. Something a bit better should probably be
+;; written. But it's an interesting way of doing it.
+
+;;; Code:
 (in-package #:stumpwm)
-
-(export '(*resize-increment*
-          iresize
-          setup-iresize))
 
 (defvar *resize-increment* 10
   "Number of pixels to increment by when interactively resizing frames.")
@@ -56,7 +51,7 @@
   (draw-frame-outlines (current-group) (current-head)))
 
 (defcommand resize-direction (d)
-  ((:direction "Direction: "))
+    ((:direction "Direction: "))
   "Resize frame to direction @var{d}"
   (case (princ d)
     ((:up) (resize 0 (- *resize-increment*)))

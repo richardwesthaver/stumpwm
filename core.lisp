@@ -25,8 +25,6 @@
 
 (in-package :stumpwm)
 
-(export '(grab-pointer ungrab-pointer))
-
 ;;; keyboard helper functions
 (defun key-to-keycode+state (key)
   (let ((code (xlib:keysym->keycodes *display* (key-keysym key))))

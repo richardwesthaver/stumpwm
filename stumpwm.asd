@@ -63,8 +63,6 @@
                (:file "manual")
                (:file "minor-modes")
                (:file "replace-class")
-               ;; keep this last so it always gets recompiled if
-               ;; anything changes
                (:file "version"))
   :in-order-to ((test-op (test-op "stumpwm/tests"))))
 

@@ -25,14 +25,6 @@
 
 (in-package #:stumpwm)
 
-(export '(load-module
-          list-modules
-          *load-path*
-          *module-dir*
-          init-load-path
-          set-module-dir
-          find-module
-          add-to-load-path))
 
 (defvar *module-dir*
   (directory-path (concat (sb-posix:getenv "HOME") "/.stumpwm.d/modules"))

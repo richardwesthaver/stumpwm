@@ -24,28 +24,6 @@
 
 (in-package #:stumpwm)
 
-(export '(*default-window-name*
-          define-window-slot
-          set-normal-gravity
-          set-maxsize-gravity
-          set-transient-gravity
-          set-window-geometry
-          find-wm-state
-          add-wm-state
-          remove-wm-state))
-
-(export
-  '(window window-xwin window-width window-height window-x window-y
-    window-gravity window-group window-number window-parent window-title
-    window-user-title window-class window-type window-res window-role
-    window-unmap-ignores window-state window-normal-hints window-marked
-    window-plist window-fullscreen window-screen
-    ;; Window utilities
-    update-configuration no-focus
-    ;; Window management API
-    update-decoration focus-window raise-window window-visible-p window-sync
-    window-head really-raise-window))
-
 (defvar *default-window-name* "Unnamed"
   "The name given to a window that does not supply its own name.")
 
