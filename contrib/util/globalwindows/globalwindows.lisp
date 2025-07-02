@@ -40,7 +40,7 @@ select the screen."
          ((sort-windows (windowlist)
             (sort1 windowlist 'string-lessp :key 'window-name)))
        (if (null global-windows-list)
-           (message "No other windows on screen ;)")
+           (swm-message "No other windows on screen ;)")
            (let ((window (select-window-from-menu (sort-windows global-windows-list) fmt)))
              (when window
                (progn ,@args))))))))

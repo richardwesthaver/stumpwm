@@ -25,8 +25,8 @@
 (in-package #:stumpwm)
 
 (export '(echo-string
-          err
-          message
+          swm-err
+          swm-message
           gravity-coords
           with-message-queuing
           *queue-messages-p*))
@@ -252,7 +252,7 @@ When the value is :new-on-bottom, new messages are added to the bottom as in a l
 See also WITH-MESSAGE-QUEUING.")
 
 (defmacro with-message-queuing (new-on-bottom-p &body body)
-  "Queue all messages sent by (MESSAGE ...), (ECHO-STRING ...), (ECHO-STRING-LIST ...)
+  "Queue all messages sent by (SWM-MESSAGE ...), (ECHO-STRING ...), (ECHO-STRING-LIST ...)
  forms within BODY without clobbering earlier messages.
 When NEW-ON-BOTTOM-P is non-nil, new messages are queued at the bottom."
   `(progn
@@ -325,12 +325,11 @@ When NEW-ON-BOTTOM-P is non-nil, new messages are queued at the bottom."
   "Display @var{string} in the message bar on @var{screen}. You almost always want to use @command{message}."
   (echo-string-list screen (split-string msg (string #\Newline))))
 
-(defun message (fmt &rest args)
+(defun swm-message (fmt &rest args)
   "run FMT and ARGS through `format' and echo the result to the current screen."
   (echo-string (current-screen) (apply 'format nil fmt args)))
 
-
-(defun err (fmt &rest args)
+(defun swm-err (fmt &rest args)
   "run FMT and ARGS through format and echo the result to the
 current screen along with a backtrace. For careful study, the
 message does not time out."
@@ -359,4 +358,4 @@ continue cycling back through the message history."
       (setf *lastmsg-nth* 0))
   (if (screen-last-msg (current-screen))
       (echo-nth-last-message (current-screen) *lastmsg-nth*)
-      (message "No last message.")))
+      (swm-message "No last message.")))

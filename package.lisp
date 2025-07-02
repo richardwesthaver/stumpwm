@@ -21,7 +21,7 @@
   (:use :cl #:std)
   (:import-from :std/seq :starts-with)
   (:import-from :sb-debug :print-backtrace :backtrace)
-  (:shadow #:yes-or-no-p #:y-or-n-p #:message #:version #:info #:take #:name))
+  (:shadow #:yes-or-no-p #:y-or-n-p #:info #:take #:name))
 
 (defpackage :stumpwm-user
   (:use :cl :stumpwm))

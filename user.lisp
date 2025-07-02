@@ -173,12 +173,12 @@ such a case, kill the shell command to resume StumpWM."
   "Evaluate the s-expression and display the result(s)."
   (handler-case
       (if cmd
-          (message "^20~{~a~^~%~}"
+          (swm-message "^20~{~a~^~%~}"
                    (mapcar 'prin1-to-string
                            (multiple-value-list (eval (read-from-string cmd)))))
           (throw 'error :abort))
     (error (c)
-      (err "^B^1*~A" c))))
+      (swm-err "^B^1*~A" c))))
 
 (defcommand-alias eval eval-line)
 
@@ -186,7 +186,7 @@ such a case, kill the shell command to resume StumpWM."
   "Display @var{string} in the message bar."
   ;; The purpose of echo is always to pop up a message window.
   (let ((*executing-stumpwm-command* nil))
-    (message "~a" string)))
+    (swm-message "~a" string)))
 
 (defun send-meta-key (screen key)
   "Send the key to the current window on the specified screen."
@@ -202,10 +202,10 @@ such a case, kill the shell command to resume StumpWM."
   (handler-case 
       (with-restarts-menu (load-rc-file nil))
     (error (c)
-      (message "^1*^BError loading rc file: ^n~A" c))
+      (swm-message "^1*^BError loading rc file: ^n~A" c))
     (:no-error (&rest args)
       (declare (ignore args))
-      (message "rc file loaded successfully."))))
+      (swm-message "rc file loaded successfully."))))
 
 (defcommand keyboard-quit () ()
   "This way you can exit from command mode. Also aliased as abort."
@@ -213,7 +213,7 @@ such a case, kill the shell command to resume StumpWM."
     (when (pop-top-map)
       (if in-command-mode
           (run-hook *command-mode-end-hook*)
-          (message "Exited.")))))
+          (swm-message "Exited.")))))
 
 (defcommand-alias abort keyboard-quit)
 
@@ -315,11 +315,11 @@ current frame instead of switching to the window."
 
 (defcommand reload () ()
   "Reload StumpWM using @code{asdf}."
-  (message "Reloading StumpWM...")
+  (swm-message "Reloading StumpWM...")
   #+asdf (with-restarts-menu
            (asdf:operate 'asdf:load-op :stumpwm))
-  #-asdf (message "^B^1*Sorry, StumpWM can only be reloaded with asdf (for now).")
-  #+asdf (message "Reloading StumpWM...^B^2*Done^n."))
+  #-asdf (swm-message "^B^1*Sorry, StumpWM can only be reloaded with asdf (for now).")
+  #+asdf (swm-message "Reloading StumpWM...^B^2*Done^n."))
 
 (defcommand emacs () ()
   "Start emacs unless it is already running, in which case focus it."
@@ -334,8 +334,8 @@ submitting the bug report."
   (if *last-unhandled-error*
       (progn
         (set-x-selection (format nil "~a~%~a" (first *last-unhandled-error*) (second *last-unhandled-error*)))
-        (message "Copied to clipboard."))
-      (message "There was no unhandled error!")))
+        (swm-message "Copied to clipboard."))
+      (swm-message "There was no unhandled error!")))
 
 (defmacro defprogram-shortcut (name &key (command (string-downcase (string name)))
                                          (props `'(:class ,(string-capitalize command)))
@@ -363,7 +363,7 @@ used for matching windows with run-or-raise or window placement
 rules."
   (let ((w (current-window)))
     (if (not w)
-        (message "No active window!")
+        (swm-message "No active window!")
         (message-no-timeout "class: ~A~%instance: ~A~%type: :~A~%role: ~A~%title: ~A"
                             (window-class w)
                             (window-res w)

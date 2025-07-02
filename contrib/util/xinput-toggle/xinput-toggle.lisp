@@ -142,8 +142,8 @@ the DEVICE class."
   "For each device matching NAME-REGEX, call fn, passing the device as arg."
   (let ((devices (get-devices name-regex)))
     (if (null devices)
-        (message "xinput-toggle: No devices match regex \"~A\"." name-regex)
-        (message (format nil "~{~A~^~%~}"
+        (swm-message "xinput-toggle: No devices match regex \"~A\"." name-regex)
+        (swm-message (format nil "~{~A~^~%~}"
                          (mapcar (lambda (d) (funcall fn d)) devices))))))
 
 (defcommand xinput-list-devices (name-regex) ((:string))
@@ -152,7 +152,7 @@ the DEVICE class."
 If NAME-REGEX is empty, all devices are listed. By default, devices containing
 'keyboard' in their name are excluded unless `*exclude-keyboards*` is set to
 NIL."
-  (message (format nil "xinput: Devices matching regex \"~A\":~% ~%~{~A~^~%~}"
+  (swm-message (format nil "xinput: Devices matching regex \"~A\":~% ~%~{~A~^~%~}"
                    name-regex
                    (mapcar #'princ-to-string (get-devices name-regex)))))
 

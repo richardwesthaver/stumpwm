@@ -137,12 +137,12 @@ which-key window. Two arguments will be passed to this formatter:
                             (describe-command-to-stream cmd-without-args nil)))
       (cond ((and (help-key-p keys)
                   (cdr printed-key))
-             (message "~{~A~^ ~} shows the bindings for the prefix map under ~{~A~^ ~}."
+             (swm-message "~{~A~^ ~} shows the bindings for the prefix map under ~{~A~^ ~}."
                       printed-key (butlast printed-key)))
             ((cancel-key-p keys)
-             (message "Any command ending in ~A is meant to cancel any command in progress \"ABORT\".~%"
+             (swm-message "Any command ending in ~A is meant to cancel any command in progress \"ABORT\".~%"
                       (lastcar printed-key)))
-            (t (message "~{~A~^ ~} is not bound." printed-key))))))
+            (t (swm-message "~{~A~^ ~} is not bound." printed-key))))))
 
 (defun describe-variable-to-stream (var stream)
   "Write the help for the variable to the stream."
@@ -292,7 +292,7 @@ FIND-BINDING-IN-KMAP."
                       (format nil "\"~a\" is an alias for the command \"~a\":~%"
                               (command-alias-from deref)
                               name))
-                    (when-let ((message (where-is-to-stream name nil)))
+                    (when-let ((swm-message (where-is-to-stream name nil)))
                       (format nil "~&~A~&" message))
                     (when-let ((lambda-list (sb-introspect:function-lambda-list
                                              (symbol-function name))))
@@ -391,7 +391,7 @@ KMAPS are enabled"
 
 (defcommand modifiers () ()
   "List the modifiers stumpwm recognizes and what MOD-X it thinks they're on."
-  (message "~@{~5@a: ~{~(~a~)~^ ~}~%~}"
+  (swm-message "~@{~5@a: ~{~(~a~)~^ ~}~%~}"
            "Meta" (modifiers-meta *modifiers*)
            "Alt" (modifiers-alt *modifiers*)
            "Super" (modifiers-super *modifiers*)

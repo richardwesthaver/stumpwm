@@ -1142,7 +1142,7 @@ windows used to draw the numbers in. The caller must destroy them."
           (when (frame-window f)
             (update-decoration (frame-window f)))
           (show-frame-indicator group))
-        (message "Cannot split smaller than minimum size."))))
+        (swm-message "Cannot split smaller than minimum size."))))
 
 (defcommand (hsplit tile-group) (&optional (ratio "1/2")) (:string)
 "Split the current frame into 2 side-by-side frames."
@@ -1174,7 +1174,7 @@ windows used to draw the numbers in. The caller must destroy them."
                                         (frame-by-number group num)))
                         new-frame-numbers
                         :initial-value (tile-group-frame-head group head)))
-          (message "Cannot split. Maybe current frame is too small.")))))
+          (swm-message "Cannot split. Maybe current frame is too small.")))))
 
 (defcommand (hsplit-equally tile-group) (amt)
     ((:number "Enter the number of frames: "))
@@ -1214,7 +1214,7 @@ space."
                            #'identity)))
     ;; Only remove the current frame if it has a sibling
     (if (atom tree)
-        (message "No more frames!")
+        (swm-message "No more frames!")
         (when s
           (when (frame-is-head group frame)
             (setf (frame-number l) (frame-number frame)))
@@ -1259,7 +1259,7 @@ This can be used around a the \"only\" command to avoid the warning message."
          (head (current-head group))
          (frame (copy-frame head)))
     (if (only-one-frame-p)
-        (message "There's only one frame.")
+        (swm-message "There's only one frame.")
         (progn
           (mapc (lambda (w)
                   ;; windows in other frames disappear
@@ -1306,7 +1306,7 @@ This can be used around a the \"only\" command to avoid the warning message."
 the current frame."
   (let ((rest (cdr (member (tile-group-current-frame group) frames :test 'eq))))
     (if (= (length frames) 1)
-        (message "No other frames.")
+        (swm-message "No other frames.")
         (focus-frame group
                      (if (null rest)
                          (car frames)
@@ -1385,7 +1385,7 @@ try the split directly above instead."
   (let* ((group (current-group))
          (f (tile-group-current-frame group)))
     (if (atom (tile-group-frame-tree group))
-        (message "No more frames!")
+        (swm-message "No more frames!")
         (progn
           (clear-frame-outlines group)
           (resize-frame group f width :width)
@@ -1498,7 +1498,7 @@ direction. The following are valid directions:
   "Make frames the same height or width in the current frame's subtree."
   (let ((tree (tile-group-frame-head group (current-head))))
     (if (frame-p tree)
-        (message "There's only one frame.")
+        (swm-message "There's only one frame.")
         (balance-frames-internal group tree))))
 
 (defun window-centroid (win)

@@ -4,16 +4,16 @@
 
 ;;; Code:
 (defpackage #:swm/cpu
-  (:use #:cl :stumpwm)
+  (:use #:cl :std :stumpwm)
   (:export #:*cpu-modeline-fmt*
            #:*acpi-thermal-zone*))
 
 (defpackage #:swm/battery
-  (:use :common-lisp :stumpwm :cl-ppcre)
+  (:use :cl :std :stumpwm :cl-ppcre)
   (:export #:*refresh-time* #:*prefer-sysfs*))
 
 (defpackage #:swm/net
-  (:use #:cl :common-lisp :stumpwm :cl-ppcre :net)
+  (:use #:cl #:stumpwm #:cl-ppcre #:net #:cli/tools/net)
   (:export #:*net-device*))
 
 (defpackage #:swm/tray

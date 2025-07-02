@@ -38,4 +38,4 @@
     (run-shell-command cmd nil)
     (when *run-xmodmap*
       (run-shell-command "xmodmap ~/.Xmodmap"))
-    (message (format nil "Keyboard layout switched to: ~a" layout))))
+    (swm-message (format nil "Keyboard layout switched to: ~a" layout))))

@@ -135,7 +135,7 @@
 
 (defcommand getsel () ()
   "Echo the X selection."
-  (message "~a" (get-x-selection)))
+  (swm-message "~a" (get-x-selection)))
 
 (defcommand copy-last-message () ()
   "Copy the last message displayed into the X selection"

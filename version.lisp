@@ -24,9 +24,9 @@
 
 (in-package :stumpwm)
 
-(export '(*version* version))
+(export '(stumpwm-version *stumpwm-version*))
 
-(defparameter *version*
+(defparameter *stumpwm-version*
   #.(concatenate
      'string
      (let* ((sys (asdf:find-system :stumpwm))
@@ -40,8 +40,8 @@
   (format-expand *time-format-string-alist*
                  *time-format-string-default*)))
 
-(defcommand version () ()
+(defcommand stumpwm-version () ()
 "Print version information and compilation date."
-  (message *version*))
+  (swm-message *stumpwm-version*))
 
 ;; End of file

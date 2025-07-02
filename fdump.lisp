@@ -122,7 +122,7 @@ location."
 If FILE is an absolute path, then the dump will be read written there.
 Otherwise, defaults to writing to \"FILE.dump\" in the XDG_DATA_HOME location."
   (dump-to-file (dump-group (current-group)) file)
-  (message "Group dumped."))
+  (swm-message "Group dumped."))
 
 (defcommand-alias dump-group dump-group-to-file)
 
@@ -131,7 +131,7 @@ Otherwise, defaults to writing to \"FILE.dump\" in the XDG_DATA_HOME location."
 If FILE is an absolute path, then the dump will be read written there.
 Otherwise, defaults to writing to \"FILE.dump\" in the XDG_DATA_HOME location."
   (dump-to-file (dump-screen (current-screen)) file)
-  (message "Screen dumped."))
+  (swm-message "Screen dumped."))
 
 (defcommand-alias dump-screen dump-screen-to-file)
 
@@ -140,7 +140,7 @@ Otherwise, defaults to writing to \"FILE.dump\" in the XDG_DATA_HOME location."
 If FILE is an absolute path, then the dump will be read written there.
 Otherwise, defaults to writing to \"FILE.dump\" in the XDG_DATA_HOME location."
   (dump-to-file (dump-desktop) file)
-  (message "Desktop dumped."))
+  (swm-message "Desktop dumped."))
 
 (defcommand-alias dump-desktop dump-desktop-to-file)
 
@@ -228,15 +228,15 @@ Otherwise, defaults to reading from \"FILE.dump\" in the XDG_DATA_HOME location.
     (typecase dump
       (gdump
        (restore-group (current-group) dump)
-       (message "Group restored."))
+       (swm-message "Group restored."))
       (sdump
        (restore-screen (current-screen) dump)
-       (message "Screen restored."))
+       (swm-message "Screen restored."))
       (ddump
        (restore-desktop dump)
-       (message "Desktop restored."))
+       (swm-message "Desktop restored."))
       (t
-       (message "Don't know how to restore ~a." dump)))))
+       (swm-message "Don't know how to restore ~a." dump)))))
 
 (defcommand-alias restore restore-from-file)
 

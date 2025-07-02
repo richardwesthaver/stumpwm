@@ -278,7 +278,7 @@ frame."
         (if pull-p
             (pull-window nw)
             (frame-raise-window group (window-frame nw) nw))
-        (message "No other window."))))
+        (swm-message "No other window."))))
 
 (defcommand (pull-window-by-number tile-group) (n &optional (group (current-group)))
                                                ((:window-number "Pull: "))
@@ -367,8 +367,8 @@ when selecting another window."
              (neighbour (neighbour dir (window-frame win) frame-set)))
         (if (and neighbour (frame-window neighbour))
             (exchange-windows win (frame-window neighbour))
-            (message "No window in direction ~A!" dir)))
-      (message "No window in current frame!")))
+            (swm-message "No window in direction ~A!" dir)))
+      (swm-message "No window in current frame!")))
 
 
 (defcommand (echo-frame-windows tile-group) (&optional (fmt *window-format*)) (:rest)
@@ -435,8 +435,8 @@ frame. Possible values are:
     (if match
         (progn
           (setf *window-placement-rules* (delete match *window-placement-rules*))
-          (message "Rule forgotten."))
-        (message "No matching rule."))))
+          (swm-message "Rule forgotten."))
+        (swm-message "No matching rule."))))
 
 (defcommand (dump-window-placement-rules tile-group) (file) ((:rest "Filename: "))
   "Dump *window-placement-rules* to FILE."
@@ -481,7 +481,7 @@ frame. Possible values are:
           (setf (window-normal-size window) status)
           ;; This makes the naming a bit funny.
           (maximize-window window))
-        (message "Window has no normal size."))))
+        (swm-message "Window has no normal size."))))
 
 (defcommand frame-windowlist (&optional (fmt *window-format*)) (:rest)
   "Allow the user to select a window from the list of windows in the current
@@ -490,7 +490,7 @@ specified to override the default window formatting."
   (let* ((group (current-group))
          (frame (tile-group-current-frame group)))
     (if (null (frame-windows group frame))
-        (message "No Managed Windows.")
+        (swm-message "No Managed Windows.")
         (let ((window (select-window-from-menu (frame-sort-windows group frame) fmt)))
           (if window
               (group-focus-window group window)
