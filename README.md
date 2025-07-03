@@ -1,3 +1,5 @@
+- NOTE: This is the CC fork of StumpWM.
+
 ![](https://stumpwm.github.io/images/stumpwm-logo-stripe.png)
 # The Stump Window Manager
 ![](https://travis-ci.org/stumpwm/stumpwm.svg)
