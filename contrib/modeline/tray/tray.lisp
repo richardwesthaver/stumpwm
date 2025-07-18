@@ -1,4 +1,4 @@
-;;;; stumptray.lisp
+;;;; tray.lisp
 
 (in-package #:swm/tray)
 
@@ -708,7 +708,6 @@ passed to `xlib:process-event'."
           (setf (tray-event-processing-fn tray) event-handler)
           (stumpwm:add-hook stumpwm:*event-processing-hook*
                             event-handler)))))
-
 
 (stumpwm:defcommand stumptray-toggle-hidden-icons-visibility () ()
   "Toggle icon visibility"

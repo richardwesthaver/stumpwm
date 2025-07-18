@@ -33,7 +33,7 @@
                               sequence &rest keys
 			      &key (start 0) end translate width size)
   (declare (ignorable start end translate width size))
-  (apply 'xft:draw-text-line 
+  (apply 'xft:draw-text-line
          drawable
          gcontext
          font
