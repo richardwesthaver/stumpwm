@@ -6,8 +6,6 @@
                 :components ((:file "golden-ratio")))
                (:module "beckon"
                 :components ((:file "beckon")))
-               (:module "binwarp"
-                :components ((:file "binwarp")))
                (:module "clipboard-history"
                 :components ((:file "clipboard-history")))
                (:module "command-history"
