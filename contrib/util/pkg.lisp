@@ -17,25 +17,6 @@
    #:frame-height #:frame-width)
   (:export #:beckon #:*window-height-fraction* #:*window-width-fraction*))
 
-(defpackage #:swm/binwarp
-  (:use #:cl :stumpwm)
-  (:export #:*binwarp-mode-p*
-           #:*binwarp-area*
-           #:*binwarp-history*
-           #:*reinitiate-ptr*
-           #:*init-ptr-position*
-           #:*preserve-history*
-           #:*default-binwarp-keymap*
-           ;; Utils
-           #:with-pointer
-           #:randwarp
-           #:define-binwarp-mode
-           ;; Binwarping commands
-           #:init-binwarp
-           #:exit-binwarp
-           #:back-binwarp
-           #:binwarp))
-
 (defpackage #:swm/clipboard-history
   (:use #:cl)
   (:export 
@@ -107,16 +88,6 @@
    :spatial-gselect
    :install-default-keybinds))
 
-(defpackage #:swm/backlight
-  (:use #:cl)
-  (:export 
-   #:backlight-increase
-   #:backlight-decrease))
-
-(defpackage #:swm/lock
-  (:use #:cl)
-  (:export #:*lock-password*))
-
 (defpackage #:swm/gaps
   (:use #:cl :stumpwm)
   (:export 
@@ -162,16 +133,3 @@
 (defpackage #:swm/winner-mode
   (:use :cl)
   (:export :winner-undo :winner-redo :*tmp-folder* :dump-group-to-file :*default-commands*))
-
-(defpackage #:swm/xinput-toggle
-  (:use #:cl)
-  (:import-from #:stumpwm
-                #:defcommand
-                #:swm-message
-                #:run-shell-command)
-  (:export #:*case-insensitive-regex*
-           #:*exclude-keyboards*
-           #:xinput-disable-devices
-           #:xinput-enable-devices
-           #:xinput-list-devices
-           #:xinput-toggle-devices))

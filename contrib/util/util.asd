@@ -22,10 +22,6 @@
                 :components ((:file "shell-command-history")))
                (:module "spatial-groups"
                 :components ((:file "spatial-groups")))
-               (:module "backlight"
-                :components ((:file "backlight")))
-               (:module "lock"
-                :components ((:file "lock")))
                (:module "gaps"
                 :components ((:file "gaps")))
                (:module "ttf-fonts"
@@ -38,8 +34,4 @@
                 :components ((:file "variables")
                              (:file "macros")
                              (:file "dumper")
-                             (:file "winner-mode")))
-               (:module "xinput-toggle"
-                :components ((:file "xinput-toggle")))))
-
-
+                             (:file "winner-mode")))))
