@@ -12,6 +12,8 @@
 :vc (:hg "https://vc.compiler.company/ext/stumpwm"
      (upstream (:git "https://github.com/stumpwm/stumpwm"))
      (gh (:git "ssh://git@github.com/richardwesthaver/stumpwm")))
+:stash ".stash"
+:cache ".stash/cache"
 :rules
 ((default (build))
  (build ()

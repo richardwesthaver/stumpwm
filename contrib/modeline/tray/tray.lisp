@@ -641,6 +641,7 @@ passed to `xlib:process-event'."
 
 (defun tray-client-list (tray)
   (mapcar #'xembed::client (tray-socket-list tray)))
+
 ;(in-package :stumpwm)
 (defun new-mode-line-hook (mode-line)
   "If *tray-autoshow*, then creates tray window"
